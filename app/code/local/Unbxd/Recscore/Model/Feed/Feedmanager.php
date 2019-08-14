@@ -131,80 +131,122 @@ class Unbxd_Recscore_Model_Feed_Feedmanager {
         }
     }
 
-	/**
- 	* method to initiate feed uploading to the unbxd servers
- 	**/
- 	public function process($isFullUpload = true, Mage_Core_Model_Website $website){
-	 	
-		$this->log('Feed Uploading request recieved');
-	        $response = $this->init($website, $isFullUpload);
-		if(is_array($response)){
-			return $response;
-		}
- 		$currentDate = date('Y-m-d H:i:s');
-		$this->_triggerSearchComplete($website);
+    /**
+     * method to initiate feed uploading to the unbxd servers
+     **/
+    public function process($isFullUpload = true, Mage_Core_Model_Website $website)
+    {
 
- 		// check the lock, that if already indexing is happening
- 		if(!$isFullUpload ||
-            !Mage::getResourceModel("unbxd_recscore/config")->isLock($website->getWebsiteId())) {
+        $this->log('Feed Uploading request recieved');
+        $response = $this->init($website, $isFullUpload);
+        if (is_array($response)) {
+            return $response;
+        }
+        $currentDate = date('Y-m-d H:i:s');
+        $this->_triggerSearchComplete($website);
 
-        	    $this->log('site '. $website->getName() .' is acquiring feed lock');
-        	    if($isFullUpload) {
-			Mage::getResourceSingleton("unbxd_recscore/config")
-                        	->setValue($website->getWebsiteId(),
-                            		Unbxd_Recscore_Model_Config::FEED_STATUS, 
-					Unbxd_Recscore_Helper_Constants::FEED_STATUS_UPLOADING);
-                	Mage::getResourceModel('unbxd_recscore/config')->lockSite($website->getWebsiteId());
-            	    }
-	            try {
-		    // create the feed
-	 	    	$status = Mage::getSingleton('unbxd_recscore/feed_feedcreator')
-                        	->setFullUpload($isFullUpload)
-	 			->createFeed($this->fileName, $website, $currentDate);
-            	    	$this->log('unbxd Datafeeder finished creating file');
-		    }catch (Exception $e) {
-             		   $this->log('Caught exception: '. $e->getMessage());
-			   $status = false;
-			  $errorMsg = $e->getMessage(); 
-            	      }
-	
-	 	    if($status){ 		
-                	$status=$this->_pushFeed($isFullUpload);
-		 	if($status){
-			 		Mage::getResourceSingleton("unbxd_recscore/config")
+        // check the lock, that if already indexing is happening
+        if (!$isFullUpload ||
+            !Mage::getResourceModel("unbxd_recscore/config")->isLock($website->getWebsiteId())
+        ) {
+
+            $this->log('site ' . $website->getName() . ' is acquiring feed lock');
+            if ($isFullUpload) {
+                Mage::getResourceSingleton("unbxd_recscore/config")
+                    ->setValue($website->getWebsiteId(),
+                        Unbxd_Recscore_Model_Config::FEED_STATUS,
+                        Unbxd_Recscore_Helper_Constants::FEED_STATUS_UPLOADING);
+                Mage::getResourceModel('unbxd_recscore/config')->lockSite($website->getWebsiteId());
+            }
+            try {
+                // create the feed
+                $status = Mage::getSingleton('unbxd_recscore/feed_feedcreator')
+                    ->setFullUpload($isFullUpload)
+                    ->createFeed($this->fileName, $website, $currentDate);
+                $this->log('unbxd Datafeeder finished creating file');
+            } catch (Exception $e) {
+                $this->log('Caught exception: ' . $e->getMessage());
+                $status = false;
+                $errorMsg = $e->getMessage();
+            }
+
+            if ($status) {
+                $status = $this->_pushFeed($isFullUpload);
+                if ($status) {
+                    Mage::getResourceSingleton("unbxd_recscore/config")
                         ->setValue($website->getWebsiteId(),
                             Unbxd_Recscore_Model_Config::LAST_UPLOAD_TIME, $currentDate);
                     $this->updateFeatureFields($website);
-		 		}
-	 		}
+                }
+            }
 
 
-            if($isFullUpload) {
+            if ($isFullUpload) {
                 // unlock the feed once everything is completed
                 Mage::getResourceModel('unbxd_recscore/config')->unLockSite($website->getWebsiteId());
-            }  else {
+            } else {
                 //In case of incremental feed delete the feed
-               // Mage::getSingleton('unbxd_recscore/filemanager')->deleteFile($this->fileName);
+                // Mage::getSingleton('unbxd_recscore/filemanager')->deleteFile($this->fileName);
             }
 
-		 	$this->log('site ' . $website->getName() .' has been unlocked');
-            if($status) {
-		Mage::getResourceSingleton("unbxd_recscore/config")
-                        ->setValue($website->getWebsiteId(),
-                            Unbxd_Recscore_Model_Config::FEED_STATUS,
-			    Unbxd_Recscore_Helper_Constants::FEED_STATUS_UPLOADED_SUCCESSFULLY);
-              return array('success' => true, 'message' => 'File uploaded successfully');
+            $this->log('site ' . $website->getName() . ' has been unlocked');
+            if ($status) {
+                Mage::getResourceSingleton("unbxd_recscore/config")
+                    ->setValue($website->getWebsiteId(),
+                        Unbxd_Recscore_Model_Config::FEED_STATUS,
+                        Unbxd_Recscore_Helper_Constants::FEED_STATUS_UPLOADED_SUCCESSFULLY);
+                return array('success' => true, 'message' => 'File uploaded successfully');
             }
-	    Mage::getResourceSingleton("unbxd_recscore/config")
-                        ->setValue($website->getWebsiteId(),
-                            Unbxd_Recscore_Model_Config::FEED_STATUS,
-			    Unbxd_Recscore_Helper_Constants::FEED_STATUS_UPLOADED_FAILED);
-            return array('success' => false, 'message' => isset($errorMsg)?$errorMsg:'Unexpected error, please contact support');
- 		} else {
- 			$this->log('Feed Uploading failed because site has been locked');
+            Mage::getResourceSingleton("unbxd_recscore/config")
+                ->setValue($website->getWebsiteId(),
+                    Unbxd_Recscore_Model_Config::FEED_STATUS,
+                    Unbxd_Recscore_Helper_Constants::FEED_STATUS_UPLOADED_FAILED);
+            return array('success' => false, 'message' => isset($errorMsg) ? $errorMsg : 'Unexpected error, please contact support');
+        } else {
+            $this->log('Feed Uploading failed because site has been locked');
             return array('success' => false, 'message' => 'Feed is already being processed');
- 		}
- 	}
+        }
+    }
+
+    public function getProducts(Mage_Core_Model_Website $website, $page = 0, $limit = 500) {
+        $response = $this->init($website, true);
+        if (is_array($response)) {
+            return $response;
+        }
+        $currentDate = date('Y-m-d H:i:s');
+        $this->_triggerSearchComplete($website);
+        Mage::getSingleton('unbxd_recscore/feed_filemanager')->setNoFile(true);
+
+        try {
+            // create the feed
+            $status = Mage::getSingleton('unbxd_recscore/feed_feedcreator')
+                ->setFullUpload(true)
+                ->setPage($page)
+                ->setLimit($limit)
+                ->createFeed($this->fileName, $website, $currentDate);
+            $this->log('unbxd Datafeeder finished creating file');
+        } catch (Exception $e) {
+            $this->log('Caught exception: ' . $e->getMessage());
+            $status = false;
+            $errorMsg = $e->getMessage();
+        }
+        if($status) {
+            return Mage::getSingleton('unbxd_recscore/feed_filemanager')->getContent($this->fileName);
+        } else {
+            return json_encode(array('message' =>$errorMsg, 'success'=> false));
+        }
+
+    }
+
+    public function getSize(Mage_Core_Model_Website $website)
+    {
+        $fromdate="1970-01-01 00:00:00";
+        $currentData = date('Y-m-d H:i:s');
+        return Mage::getSingleton('unbxd_recscore/feed_feedcreator')
+            ->setFullUpload(true)
+            ->getSize($website, $fromdate, $currentData);
+
+    }
 
 	public function log($message) {
 		Mage::helper('unbxd_recscore')->log(Zend_Log::DEBUG, $message);

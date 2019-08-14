@@ -33,6 +33,12 @@ class Unbxd_Recscore_Helper_Constants extends Mage_Core_Helper_Abstract {
 
     const FEATURE_FIELD_PRODUCT_URL = 'productUrl';
 
+    const FEATURE_FIELD_CATEGORY = 'category';
+
+    const FEATURE_FIELD_BRAND = 'brand';
+
+    const FEATURE_FIELD_TITLE = 'title';
+
     const AUTOSUGGEST_STATUS = 'autosuggest_status';
 
     const AUTOSUGGEST_SKIN = 'autosuggest_skin';
@@ -67,7 +73,7 @@ class Unbxd_Recscore_Helper_Constants extends Mage_Core_Helper_Abstract {
 
     const AUTOSUGGEST_TEMPLATE_2COLUMN_RIGHT = '2column-right';
 
-    const AUTOSUGGEST_TEMPLATE_1COLUMN_ADD_TO_CART = '1column-add-to-cart';
+    const AUTOSUGGEST_TEMPLATE_1COLUMN_ADD_TO_CART = '1column-addToCart';
 
     const AUTOSUGGEST_SIDECONTENT = 'autosuggest_sidecontent';
 

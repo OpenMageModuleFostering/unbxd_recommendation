@@ -81,4 +81,41 @@ class Unbxd_Recscore_CatalogController extends Mage_Core_Controller_Front_Action
                 'errors' => array('message' => 'Invalid method'))));
         }
     }
+
+    /**
+     * Method to get the products in bunches
+     * @void
+     */
+    public function productsAction(){
+        $website = $this->_prepare();
+        if (is_null($website)) {
+            return;
+        }
+        ignore_user_abort(true);
+        set_time_limit(0);
+        $page = $this->getRequest()->getParam('start', 0);
+        $limit = $this->getRequest()->getParam('limit', 500);
+        $isFullUpload = true;
+        $feedMgr = Mage::getSingleton('unbxd_recscore/feed_feedmanager');
+        if(array_key_exists('incremental', $_REQUEST)) {
+            $isFullUpload = false;
+        }
+
+        $response = $feedMgr->getProducts($website, $page, $limit);
+        $this->getResponse()->setBody($response);
+        return;
+    }
+
+    public function sizeAction()
+    {
+        $website = $this->_prepare();
+        if (is_null($website)) {
+            return;
+        }
+        $feedMgr = Mage::getSingleton('unbxd_recscore/feed_feedmanager');
+        $size = $feedMgr->getSize($website);
+        $response = json_encode(array('size'=> $size));
+        $this->getResponse()->setBody($response);
+        return;
+    }
 }

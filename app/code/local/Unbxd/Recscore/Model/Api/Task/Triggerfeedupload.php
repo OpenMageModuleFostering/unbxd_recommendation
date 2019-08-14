@@ -21,12 +21,13 @@ class Unbxd_Recscore_Model_Api_Task_Triggerfeedupload extends Unbxd_Recscore_Mod
     }
 
     protected function prepareUrl() {
-        static::$url = Mage::getBaseUrl()."unbxd/config/productsync";
+        static::$url = Mage::getBaseUrl()."recscore/config/productsync";
         return $this;
     }
 
     protected function prepareParams(Mage_Core_Model_Website $website) {
         $this->setData("site", $website->getName());
+        $this->setData("auth", Mage::getSingleton('unbxd_recscore/auth')->getAuthKey());
         return $this;
     }
 

@@ -12,7 +12,7 @@ class Unbxd_Recscore_Model_Resource_Product_Collection extends
     	return false;
     }
 
-        /**
+    /**
      * Join Product Price Table | Ensuring left join happens
      *
      * @return Mage_Catalog_Model_Resource_Product_Collection
@@ -80,7 +80,7 @@ class Unbxd_Recscore_Model_Resource_Product_Collection extends
     protected function _addBasicFilterToUpload(Mage_Core_Model_Website $website)
     {
         $adapter = Mage::getSingleton("core/resource");
-	$visiblityCondition = array('in' => array(2,3,4));
+	    $visiblityCondition = array('in' => array(2,3,4));
         $_catalogInventoryTable = method_exists($adapter, 'getTableName')
             ? $adapter->getTableName('cataloginventory_stock_item') : 'catalog_category_product_index';
 
@@ -94,7 +94,7 @@ class Unbxd_Recscore_Model_Resource_Product_Collection extends
 
         if (!Mage::helper('unbxd_recscore')
             ->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_OUT_OF_STOCK)) {
-            Mage::getModel('cataloginventory/stock_status')->addStockStatusToProducts($this);
+            Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($this);
         }
 
         Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($this);
@@ -111,7 +111,6 @@ class Unbxd_Recscore_Model_Resource_Product_Collection extends
         $this->_addBasicFilterToUpload($website);
         return $this;
     }
-
 }
 
 ?>

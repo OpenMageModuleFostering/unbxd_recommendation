@@ -38,6 +38,7 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
             $this->categoryMap[$category_id] = $category;
             $parentCategories = $category->getParentCategories();
             foreach($parentCategories as $parentCategory) {
+                $parentCategory = Mage::getModel('catalog/category')->load($parentCategory->getId());
                 $this->categoryMap[$parentCategory->getId()] = $parentCategory;
             }
             return $this->categoryMap[$category_id];
@@ -88,10 +89,10 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
             return $this->attributeToTypeMap;
         }
     }
-	
+
     public function isAttributePresent($attributeName) {
-	$fieldMap = $this->getAttributeMapping();
-	return array_key_exists( $attributeName, $fieldMap);
+        $fieldMap = $this->getAttributeMapping();
+        return array_key_exists( $attributeName, $fieldMap);
     }
 
     /**
@@ -106,6 +107,11 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
         } else {
             return "text";
         }
+    }
+
+    function endsWith($haystack, $needle) {
+        // search forward starting from end minus needle length characters
+        return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
     }
 
     /*
@@ -125,7 +131,8 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
             $attributeName == Unbxd_Recscore_Model_Resource_Field::CATEGORY_IDS_NAME ||
             $attributeName == Unbxd_Recscore_Model_Resource_Field::CAT_LEVEL_1_NAME ||
             $attributeName == Unbxd_Recscore_Model_Resource_Field::CAT_LEVEL_2_NAME ||
-            $attributeName == Unbxd_Recscore_Model_Resource_Field::CAT_LEVEL_3_NAME){
+            $attributeName == Unbxd_Recscore_Model_Resource_Field::CAT_LEVEL_3_NAME ||
+            $this->endsWith($attributeName, 'Associated')){
             return true;
         }
         return false;
@@ -200,6 +207,6 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
             $this->_filters = Mage::getResourceModel('unbxd_recscore/config')->getFilters($website);
         }
         return $this->_filters;
-     }
+    }
 
 }

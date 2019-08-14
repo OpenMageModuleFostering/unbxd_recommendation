@@ -10,6 +10,8 @@ class Unbxd_Recscore_Model_Feed_Tags {
 
     const ADD = 'add';
 
+    const ITEMS = 'items';
+
     const DELETE = 'delete';
 
     const OBJ_START = '{';

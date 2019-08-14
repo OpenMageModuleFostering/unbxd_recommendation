@@ -154,5 +154,9 @@ class Unbxd_Recscore_Model_Observer {
         Mage::getSingleton('unbxd_recscore/sync')->addProduct($_item);
         return $this;
     }
+
+    public function saleOrderCancel(Varien_Event_Observer $observer) {
+
+    }
 }
 ?>

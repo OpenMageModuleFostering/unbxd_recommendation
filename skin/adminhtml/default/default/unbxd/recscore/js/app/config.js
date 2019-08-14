@@ -3,8 +3,8 @@ function(){
 
 	var Config = {
 		pdn:true,
-		maxSuggestions:30,
-		maxPopularProducts:20,
+		maxSuggestions:16,
+		maxPopularProducts:10,
 		site:"",
 
 

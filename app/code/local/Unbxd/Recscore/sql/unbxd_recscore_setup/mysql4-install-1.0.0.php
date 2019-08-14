@@ -82,6 +82,7 @@ VALUES
 	({$websiteId}, 'categoryIds', 'longText', 0, NULL, 1, 0),
 	({$websiteId}, 'category', 'text', 0, 'category', 1, 0),
 	({$websiteId}, 'uniqueId', 'longText', 0, NULL, 0, 0),
+	({$websiteId}, 'type_id', 'longText', 0, NULL, 0, 0),
 	({$websiteId}, 'entity_id', 'longText', 0, NULL, 0, 0)
 	ON DUPLICATE KEY UPDATE `field_name`=`field_name`;";
     $installer->run($insertQuery);

@@ -5,7 +5,8 @@
  * @package Unbxd_Recscore
  * @author Unbxd Software Pvt. Ltd
  */
-class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
+class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data
+{
 
     const SITE_KEY = "site_key";
 
@@ -32,13 +33,14 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
      */
     public static $data_types = array("text", "longText", "link", "decimal", "number", "datetime");
 
-    public function validateAndSaveKeys($website, $requestBody){
+    public function validateAndSaveKeys($website, $requestBody)
+    {
         $errors = $this->validateKeyParams($requestBody);
-        if(sizeof($errors) > 0) {
+        if (sizeof($errors) > 0) {
             return $errors;
         }
         $requestParams = json_decode($requestBody, true);
-        if(!$requestParams) {
+        if (!$requestParams) {
             $errors['message'] = 'Invalid Request';
             return $errors;
         }
@@ -47,16 +49,16 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
             ->setData(Unbxd_Recscore_Model_Api_Task_Validatekeys::SITE_KEY, $requestParams[self::SITE_KEY])
             ->prepare($website)
             ->process();
-        if(!$response->isSuccess()) {
+        if (!$response->isSuccess()) {
             return $response->getErrors();
         }
 
-	$existingSecretKey = Mage::getResourceModel('unbxd_recscore/config')
-					->getValue($website->getWebsiteId(), Unbxd_Recscore_Helper_Constants::SECRET_KEY);
-	$keyAlreadyExists = !is_null($existingSecretKey);
-	if($keyAlreadyExists) {
-		$this->flushConfigs($website);
-	}
+        $existingSecretKey = Mage::getResourceModel('unbxd_recscore/config')
+            ->getValue($website->getWebsiteId(), Unbxd_Recscore_Helper_Constants::SECRET_KEY);
+        $keyAlreadyExists = !is_null($existingSecretKey);
+        if ($keyAlreadyExists) {
+            $this->flushConfigs($website);
+        }
 
         Mage::getResourceModel('unbxd_recscore/config')
             ->setValue($website->getWebsiteId(), Unbxd_Recscore_Helper_Constants::SECRET_KEY,
@@ -73,80 +75,89 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
             ->setValue($website->getWebsiteId(),
                 Unbxd_Recscore_Helper_Constants::USERNAME,
                 $response[Unbxd_Recscore_Model_Api_Task_Validatekeys::USERNAME]);
-	$this->saveConfig(Mage::app()->getWebsite(),
-                     array(Unbxd_Recscore_Helper_Constants::API_KEY => $response[Unbxd_Recscore_Model_Api_Task_Validatekeys::API_KEY], 
-				Unbxd_Recscore_Helper_Constants::SITE_KEY => $requestParams[Unbxd_Recscore_Helper_Constants::SITE_KEY]));
+        $this->saveConfig(Mage::app()->getWebsite(),
+            array(Unbxd_Recscore_Helper_Constants::API_KEY => $response[Unbxd_Recscore_Model_Api_Task_Validatekeys::API_KEY],
+                Unbxd_Recscore_Helper_Constants::SITE_KEY => $requestParams[Unbxd_Recscore_Helper_Constants::SITE_KEY]));
         return $errors;
     }
 
-    public function flushConfigs($website) { 
-	Mage::helper('unbxd_recscore')->log(Zend_Log::DEBUG, 'Flushing all the configs');
-	$configs = $this->getEngineConfigData('', $website, true);
-	foreach($configs as $config=>$value) {
-		Mage::getConfig()->deleteConfig(Unbxd_Recscore_Helper_Constants::UNBXD_CONFIG_PREFIX .
-							Unbxd_Recscore_Helper_Constants::CONFIG_SEPARATOR .
-							$config,
-							'websites',
-							(int)$website->getWebsiteId());
-	}
-	Mage::getResourceModel('unbxd_recscore/config')->deleteAll($website->getWebsiteId());
+    public function flushConfigs($website)
+    {
+        Mage::helper('unbxd_recscore')->log(Zend_Log::DEBUG, 'Flushing all the configs');
+        $configs = $this->getEngineConfigData('', $website, true);
+        foreach ($configs as $config => $value) {
+            Mage::getConfig()->deleteConfig(Unbxd_Recscore_Helper_Constants::UNBXD_CONFIG_PREFIX .
+                Unbxd_Recscore_Helper_Constants::CONFIG_SEPARATOR .
+                $config,
+                'websites',
+                (int)$website->getWebsiteId());
+        }
+        Mage::getResourceModel('unbxd_recscore/config')->deleteAll($website->getWebsiteId());
 
     }
 
-    public function validateKeyParams($requestBody) {
+    public function validateKeyParams($requestBody)
+    {
         $errors = array();
         $requestParams = json_decode($requestBody, true);
-        if(!$requestParams) {
+        if (!$requestParams) {
             Mage::helper('unbxd_recscore')->log(Zend_Log::ERR, 'Invalid request with requestBody' . $requestBody);
             $errors['message'] = 'Invalid Request';
             return $errors;
         }
-        if(!array_key_exists(Unbxd_Recscore_Helper_Constants::SECRET_KEY,$requestParams)){
+        if (!array_key_exists(Unbxd_Recscore_Helper_Constants::SECRET_KEY, $requestParams)) {
             $errors[Unbxd_Recscore_Helper_Constants::SECRET_KEY] = "Has Empty Data";
         }
-        if(!array_key_exists(Unbxd_Recscore_Helper_Constants::SITE_KEY, $requestParams)) {
+        if (!array_key_exists(Unbxd_Recscore_Helper_Constants::SITE_KEY, $requestParams)) {
             $errors[Unbxd_Recscore_Helper_Constants::SITE_KEY] = "Has Empty Data";
         }
         return $errors;
     }
 
-    public function getFeatureFields() {
+    public function getFeatureFields()
+    {
         return Unbxd_Recscore_Model_Field::$feature_fields;
     }
 
-    public function getAllAttributes($fieldNameAsKey = false) {
+    public function getAllAttributes($fieldNameAsKey = false)
+    {
         $attributes = Mage::getSingleton('eav/config')
             ->getEntityType(Mage_Catalog_Model_Product::ENTITY)->getAttributeCollection();
         $fields = array();
-        foreach($attributes as $attribute) {
+        foreach ($attributes as $attribute) {
             $attributeType = $attribute->getFrontendInput();
-            $fieldType = $attributeType == 'media_image'?Unbxd_Recscore_Helper_Constants::FIELD_TYPE_IMAGE:
-                ($attributeType == 'price'?Unbxd_Recscore_Helper_Constants::FIELD_TYPE_NUMBER:
-                    ($attributeType == 'date'?Unbxd_Recscore_Helper_Constants::FIELD_TYPE_DATE:
+            $fieldType = $attributeType == 'media_image' ? Unbxd_Recscore_Helper_Constants::FIELD_TYPE_IMAGE :
+                ($attributeType == 'price' ? Unbxd_Recscore_Helper_Constants::FIELD_TYPE_NUMBER :
+                    ($attributeType == 'date' ? Unbxd_Recscore_Helper_Constants::FIELD_TYPE_DATE :
                         Unbxd_Recscore_Helper_Constants::FIELD_TYPE_STRING));
-	    $fieldType = ($attribute->getName() == "created_at")?Unbxd_Recscore_Helper_Constants::FIELD_TYPE_DATE:$fieldType;
-	    $fieldType = ($attribute->getName() == "updated_at")?Unbxd_Recscore_Helper_Constants::FIELD_TYPE_DATE:$fieldType;
-	    if($fieldNameAsKey) {
- 		$fields[$attribute->getName()] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME => $attribute->getName(),
-                	 Unbxd_Recscore_Helper_Constants::FIELD_TYPE => $fieldType);
-	    } else {
-            	$fields[] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME => $attribute->getName(),
-                	Unbxd_Recscore_Helper_Constants::FIELD_TYPE => $fieldType);
-	    }
+            $fieldType = ($attribute->getName() == "created_at") ? Unbxd_Recscore_Helper_Constants::FIELD_TYPE_DATE : $fieldType;
+            $fieldType = ($attribute->getName() == "updated_at") ? Unbxd_Recscore_Helper_Constants::FIELD_TYPE_DATE : $fieldType;
+            if ($fieldNameAsKey) {
+                $fields[$attribute->getName()] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME => $attribute->getName(),
+                    Unbxd_Recscore_Helper_Constants::FIELD_TYPE => $fieldType);
+            } else {
+                $fields[] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME => $attribute->getName(),
+                    Unbxd_Recscore_Helper_Constants::FIELD_TYPE => $fieldType);
+            }
         }
-	if($fieldNameAsKey) {
-		$fields['final_price'] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME =>"final_price",
-         Unbxd_Recscore_Helper_Constants::FIELD_TYPE => Unbxd_Recscore_Helper_Constants::FIELD_TYPE_NUMBER);
-	} else {
-		$fields[] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME =>"final_price",
-         Unbxd_Recscore_Helper_Constants::FIELD_TYPE => Unbxd_Recscore_Helper_Constants::FIELD_TYPE_NUMBER);
-	}
+        if ($fieldNameAsKey) {
+            $fields['final_price'] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME => "final_price",
+                Unbxd_Recscore_Helper_Constants::FIELD_TYPE => Unbxd_Recscore_Helper_Constants::FIELD_TYPE_NUMBER);
+            $fields['type_id'] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME => "type_id",
+                Unbxd_Recscore_Helper_Constants::FIELD_TYPE => Unbxd_Recscore_Helper_Constants::FIELD_TYPE_STRING);
+        } else {
+            $fields[] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME => "final_price",
+                Unbxd_Recscore_Helper_Constants::FIELD_TYPE => Unbxd_Recscore_Helper_Constants::FIELD_TYPE_NUMBER);
+            $fields[] = array(Unbxd_Recscore_Helper_Constants::FIELD_NAME => "type_id",
+                Unbxd_Recscore_Helper_Constants::FIELD_TYPE => Unbxd_Recscore_Helper_Constants::FIELD_TYPE_STRING);
+        }
         return $fields;
     }
 
-    private function getFieldMapping($fields) {
+    private function getFieldMapping($fields)
+    {
         $fieldMapping = array();
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             $fieldMapping[$field->getFieldName()] = $field;
         }
         return $fieldMapping;
@@ -156,53 +167,56 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
      * @param $fields
      * @return array
      */
-    private function validate($fields) {
+    private function validate($fields)
+    {
         $errors = array();
-	if(!is_array($fields)) {
-		$errors["message"] = "Expecting theInput data should be an array, Given " . gettype($fields);
-		return $errors;
-	}
-	$existingAttributes = $this->getAllAttributes(true);
-	$featureFields = Mage::getModel('unbxd_recscore/field')->getFeaturedFields();
-        foreach($fields as $field) {
-            if(!array_key_exists(Unbxd_Recscore_Model_Field::field_name, $field)) {
+        if (!is_array($fields)) {
+            $errors["message"] = "Expecting theInput data should be an array, Given " . gettype($fields);
+            return $errors;
+        }
+        $existingAttributes = $this->getAllAttributes(true);
+        $featureFields = Mage::getModel('unbxd_recscore/field')->getFeaturedFields();
+        foreach ($fields as $field) {
+            if (!array_key_exists(Unbxd_Recscore_Model_Field::field_name, $field)) {
                 $errors["extra"] = "Not Present for all the fields";
-		continue;
+                continue;
             } else if (is_null($field[Unbxd_Recscore_Model_Field::field_name]) ||
-                $field[Unbxd_Recscore_Model_Field::field_name] =="") {
+                $field[Unbxd_Recscore_Model_Field::field_name] == ""
+            ) {
                 $errors["extra"] = "field Name is empty for some fields";
-		continue;
+                continue;
             }
             if (!array_key_exists(Unbxd_Recscore_Model_Field::datatype, $field)) {
                 $errors[$field[Unbxd_Recscore_Model_Field::field_name]] = "Not Present for all the fields";
-            } else if (!in_array($field[Unbxd_Recscore_Model_Field::datatype], Unbxd_Recscore_Model_Field::$data_types)){
-                Mage::helper('unbxd_recscore')->log(Zend_Log::ERR, 'Invalid feature field '.
+            } else if (!in_array($field[Unbxd_Recscore_Model_Field::datatype], Unbxd_Recscore_Model_Field::$data_types)) {
+                Mage::helper('unbxd_recscore')->log(Zend_Log::ERR, 'Invalid feature field ' .
                     $field[Unbxd_Recscore_Model_Field::datatype]);
                 $errors[$field[Unbxd_Recscore_Model_Field::field_name]] = "Invalid datatype specified";
             }
-		
-	    if(array_key_exists($field[Unbxd_Recscore_Model_Field::field_name], $existingAttributes)) {
-		if(!Mage::getSingleton('unbxd_recscore/field')->validateDatatype($field[Unbxd_Recscore_Model_Field::datatype], $existingAttributes[$field[Unbxd_Recscore_Model_Field::field_name]][Unbxd_Recscore_Helper_Constants::FIELD_TYPE])) {
-			$errors[$field[Unbxd_Recscore_Model_Field::field_name]] =  "Field cannot be mapped to " . $field[Unbxd_Recscore_Model_Field::datatype];
-		}
-	    }
+
+            if (array_key_exists($field[Unbxd_Recscore_Model_Field::field_name], $existingAttributes)) {
+                if (!Mage::getSingleton('unbxd_recscore/field')->validateDatatype($field[Unbxd_Recscore_Model_Field::datatype], $existingAttributes[$field[Unbxd_Recscore_Model_Field::field_name]][Unbxd_Recscore_Helper_Constants::FIELD_TYPE])) {
+                    $errors[$field[Unbxd_Recscore_Model_Field::field_name]] = "Field cannot be mapped to " . $field[Unbxd_Recscore_Model_Field::datatype];
+                }
+            }
 
             if (array_key_exists(Unbxd_Recscore_Model_Field::featured_field, $field)) {
-                if(!array_key_exists($field[Unbxd_Recscore_Model_Field::featured_field], $featureFields)) {
-                    Mage::helper('unbxd_recscore')->log(Zend_Log::ERR, 'Invalid feature field '.
+                if (!array_key_exists($field[Unbxd_Recscore_Model_Field::featured_field], $featureFields)) {
+                    Mage::helper('unbxd_recscore')->log(Zend_Log::ERR, 'Invalid feature field ' .
                         $field[Unbxd_Recscore_Model_Field::featured_field]);
                     $errors[$field[Unbxd_Recscore_Model_Field::field_name]] = "Invalid feature field specified";
-                } else if(!Mage::getSingleton('unbxd_recscore/field')->validateDatatype($featureFields[$field[Unbxd_Recscore_Model_Field::featured_field]]["datatype"], $existingAttributes[$field[Unbxd_Recscore_Model_Field::field_name]][Unbxd_Recscore_Helper_Constants::FIELD_TYPE])){
-			$errors[$field[Unbxd_Recscore_Model_Field::field_name]] = "Field cannot be mapped to " . $field[Unbxd_Recscore_Model_Field::datatype];
-		}
+                } else if (!Mage::getSingleton('unbxd_recscore/field')->validateDatatype($featureFields[$field[Unbxd_Recscore_Model_Field::featured_field]]["datatype"], $existingAttributes[$field[Unbxd_Recscore_Model_Field::field_name]][Unbxd_Recscore_Helper_Constants::FIELD_TYPE])) {
+                    $errors[$field[Unbxd_Recscore_Model_Field::field_name]] = "Field cannot be mapped to " . $field[Unbxd_Recscore_Model_Field::datatype];
+                }
             }
         }
         return $errors;
     }
 
-    public function deleteFields($fields, $website) {
+    public function deleteFields($fields, $website)
+    {
         $errors = $this->validate($fields);
-        if(sizeof($errors) != 0) {
+        if (sizeof($errors) != 0) {
             return $errors;
         }
         $collection = $this->buildFieldCollection($fields, $website);
@@ -214,29 +228,23 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
      * @param $website
      * @return array
      */
-    public function saveFields($fields, $website) {
+    public function saveFields($fields, $website)
+    {
         $errors = $this->validate($fields);
-        if(sizeof($errors) != 0) {
+        if (sizeof($errors) != 0) {
             return $errors;
         }
         $collection = $this->buildFieldCollectionToAdd($fields, $website);
         $response = Mage::getModel("unbxd_recscore/field")->saveFields($collection);
-        if(!is_array($response) && $response === true) {
-	    $urlName = Mage::getResourceModel('unbxd_recscore/field')->getFieldByFeatureField(Mage::app()->getWebsite()->getWebsiteId(),
-                  Unbxd_Recscore_Helper_Constants::FEATURE_FIELD_PRODUCT_URL);
-	    $priceName =  Mage::getResourceModel('unbxd_recscore/field')->getFieldByFeatureField(Mage::app()->getWebsite()->getWebsiteId(),
-                  Unbxd_Recscore_Helper_Constants::FEATURE_FIELD_PRODUCT_URL);
-	    Mage::helper('unbxd_recscore')->saveConfig(Mage::app()->getWebsite(),
-                  array(Unbxd_Recscore_Helper_Constants::FEATURE_FIELD_PRODUCT_URL => $urlName));
-	    Mage::helper('unbxd_recscore')->saveConfig(Mage::app()->getWebsite(),
-                  array(Unbxd_Recscore_Helper_Constants::FEATURE_FIELD_PRICE => $priceName));
-
+        if (!is_array($response) && $response === true) {
+            Mage::getSingleton('unbxd_recscore/field')->rebuildConfigCache($website);
             $this->triggerUpdateFeatureField($website);
         }
     }
 
 
-    public function triggerUpdateFeatureField(Mage_Core_Model_Website $website) {
+    public function triggerUpdateFeatureField(Mage_Core_Model_Website $website)
+    {
         Mage::getResourceModel('unbxd_recscore/config')
             ->setValue($website->getWebsiteId(),
                 Unbxd_Recscore_Helper_Constants::NEED_FEATURE_FIELD_UPDATION,
@@ -249,46 +257,51 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
      * @param Mage_Core_Model_Website $website
      * @return void
      */
-    public function triggerFeedUpload(Mage_Core_Model_Website $website) {
+    public function triggerFeedUpload(Mage_Core_Model_Website $website)
+    {
         Mage::getModel('unbxd_recscore/api_task_triggerfeedupload')
             ->prepare($website)
             ->process();
     }
 
 
-    private function getFeatureFieldToFieldMapping($fields) {
+    private function getFeatureFieldToFieldMapping($fields)
+    {
         $featureFieldToFieldMapping = array();
-        foreach($fields as $field) {
-            if($field instanceof Unbxd_Recscore_Model_Field &&
+        foreach ($fields as $field) {
+            if ($field instanceof Unbxd_Recscore_Model_Field &&
                 $field->hasData(Unbxd_Recscore_Model_Field::featured_field) &&
-                !is_null($field->getData(Unbxd_Recscore_Model_Field::featured_field))) {
+                !is_null($field->getData(Unbxd_Recscore_Model_Field::featured_field))
+            ) {
                 $featureFieldToFieldMapping[$field[Unbxd_Recscore_Model_Field::featured_field]] = $field;
             }
         }
         return $featureFieldToFieldMapping;
     }
 
-    private function buildFieldCollection($fields, $website) {
+    private function buildFieldCollection($fields, $website)
+    {
         $collection = array();
         $fieldMapping = $this->getFieldMapping($this->getFields($fields, $website));
-        foreach($fields as $field) {
+        foreach ($fields as $field) {
             if (!array_key_exists(Unbxd_Recscore_Model_Field::field_name, $field)) {
                 continue;
             }
-            if(array_key_exists($field[Unbxd_Recscore_Model_Field::field_name], $fieldMapping)) {
+            if (array_key_exists($field[Unbxd_Recscore_Model_Field::field_name], $fieldMapping)) {
                 $collection[]["delete"] = $fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]];
             }
         }
         return $collection;
     }
 
-    private function buildFieldCollectionToAdd($fields, $website) {
+    private function buildFieldCollectionToAdd($fields, $website)
+    {
         $collection = array();
         $fieldMapping = $this->getFieldMapping($this->getFields($fields, $website));
         $featureFieldToFieldMapping = $this->getFeatureFieldToFieldMapping($fieldMapping);
 
-        foreach($fields as $field) {
-            if(!array_key_exists(Unbxd_Recscore_Model_Field::field_name, $field)) {
+        foreach ($fields as $field) {
+            if (!array_key_exists(Unbxd_Recscore_Model_Field::field_name, $field)) {
                 continue;
             }
             /*
@@ -311,37 +324,35 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
             */
 
             // case 1
-            if(array_key_exists($field[Unbxd_Recscore_Model_Field::field_name], $fieldMapping ) &&
+            if (array_key_exists($field[Unbxd_Recscore_Model_Field::field_name], $fieldMapping) &&
                 $fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]]->hasData(Unbxd_Recscore_Model_Field::featured_field) &&
-                !is_null($fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]]->getData(Unbxd_Recscore_Model_Field::featured_field))) {
+                !is_null($fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]]->getData(Unbxd_Recscore_Model_Field::featured_field))
+            ) {
                 //case 1 a)
                 if (array_key_exists(Unbxd_Recscore_Model_Field::featured_field, $field) &&
                     $field[Unbxd_Recscore_Model_Field::featured_field] ==
-                    $fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]][Unbxd_Recscore_Model_Field::featured_field]) {
+                    $fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]][Unbxd_Recscore_Model_Field::featured_field]
+                ) {
                     continue;
-                }
-                // case 1 b)
+                } // case 1 b)
                 else if (array_key_exists(Unbxd_Recscore_Model_Field::featured_field, $field)) {
                     $collection[]["delete"] = $featureFieldToFieldMapping[$field[Unbxd_Recscore_Model_Field::featured_field]];
                     $collection[]["delete"] = $fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]];
                     $fieldModel = Mage::getModel("unbxd_recscore/field");
                     $fieldModel->setFeaturedField($field[Unbxd_Recscore_Model_Field::featured_field]);
-                }
-
-                //case 1 c)
+                } //case 1 c)
                 else {
                     $collection[]["delete"] = $fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]];
                     $fieldModel = Mage::getModel("unbxd_recscore/field");
 
                 }
-            } else if(array_key_exists($field[Unbxd_Recscore_Model_Field::field_name], $fieldMapping)) {
+            } else if (array_key_exists($field[Unbxd_Recscore_Model_Field::field_name], $fieldMapping)) {
                 //case 2 a)
                 if (array_key_exists(Unbxd_Recscore_Model_Field::featured_field, $field)) {
                     $collection[]["delete"] = $fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]];
                     $fieldModel = Mage::getModel("unbxd_recscore/field");
                     $fieldModel->setFeaturedField($field[Unbxd_Recscore_Model_Field::featured_field]);
-                }
-                // case 2 b)
+                } // case 2 b)
                 else {
                     $fieldModel = $fieldMapping[$field[Unbxd_Recscore_Model_Field::field_name]];
                 }
@@ -349,10 +360,10 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
                 $fieldModel = Mage::getModel("unbxd_recscore/field");
                 if (array_key_exists(Unbxd_Recscore_Model_Field::featured_field, $field)) {
                     $fieldModel->setFeaturedField($field[Unbxd_Recscore_Model_Field::featured_field]);
-		    // case 3 a)
-		    if(array_key_exists($field[Unbxd_Recscore_Model_Field::featured_field], $featureFieldToFieldMapping)) {
-			$collection[]["delete"] = $featureFieldToFieldMapping[$field[Unbxd_Recscore_Model_Field::featured_field]];
-		    }
+                    // case 3 a)
+                    if (array_key_exists($field[Unbxd_Recscore_Model_Field::featured_field], $featureFieldToFieldMapping)) {
+                        $collection[]["delete"] = $featureFieldToFieldMapping[$field[Unbxd_Recscore_Model_Field::featured_field]];
+                    }
                 }
 
             }
@@ -372,20 +383,21 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
      * @param $fields
      * @return mixed
      */
-    private function getFields($fields, $website) {
+    private function getFields($fields, $website)
+    {
         $inField = array();
-        foreach($fields as $field) {
-	    if($field[Unbxd_Recscore_Model_Field::field_name] == "") {
-		continue;
-	    } 
-            $inField[] = "'" .$field[Unbxd_Recscore_Model_Field::field_name]. "'";
+        foreach ($fields as $field) {
+            if ($field[Unbxd_Recscore_Model_Field::field_name] == "") {
+                continue;
+            }
+            $inField[] = "'" . $field[Unbxd_Recscore_Model_Field::field_name] . "'";
         }
         $collection = Mage::getResourceModel("unbxd_recscore/field_collection");
 
         $collection->getSelect()
-		->where('(' . Unbxd_Recscore_Model_Field::field_name  . ' in ('. implode(",", $inField). ')'. " OR ".
-            		Unbxd_Recscore_Model_Field::featured_field. " IS NOT NULL) AND ".
-            		Unbxd_Recscore_Model_Field::website_id . " = " . $website->getWebsiteId());
+            ->where('(' . Unbxd_Recscore_Model_Field::field_name . ' in (' . implode(",", $inField) . ')' . " OR " .
+                Unbxd_Recscore_Model_Field::featured_field . " IS NOT NULL) AND " .
+                Unbxd_Recscore_Model_Field::website_id . " = " . $website->getWebsiteId());
         return $collection->load();
     }
 
@@ -395,23 +407,25 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
      *
      * @return bool| array
      */
-    public function updateFeatureFields(Mage_Core_Model_Website $website) {
+    public function updateFeatureFields(Mage_Core_Model_Website $website)
+    {
         $response = Mage::getModel("unbxd_recscore/api_task_updatefeaturefields")
             ->prepare($website)
             ->process();
-        if(! $response->isSuccess()) {
+        if (!$response->isSuccess()) {
             Mage::log(Zend_Log::ERR,
-                "Update feature fields failed because of theses errors ".json_encode($response->getErrors()));
+                "Update feature fields failed because of theses errors " . json_encode($response->getErrors()));
             return $response->getErrors();
         }
         return true;
     }
 
-    public function getNumberOfDocsInUnbxd(Mage_Core_Model_Website $website) {
+    public function getNumberOfDocsInUnbxd(Mage_Core_Model_Website $website)
+    {
         $response = Mage::getModel('unbxd_recscore/api_task_feeddetails')
             ->prepare($website)
             ->process();
-        if($response->isSuccess()) {
+        if ($response->isSuccess()) {
             $response = $response->getResponse();
             $feedInfo = $response[Unbxd_Recscore_Model_Api_Task_Feeddetails::FEEDINFO];
             return $feedInfo[Unbxd_Recscore_Model_Api_Task_Feeddetails::NUMDOCS];
@@ -423,31 +437,36 @@ class Unbxd_Recscore_Helper_Confighelper extends Unbxd_Recscore_Helper_Data {
      * @param Mage_Core_Model_Website $website
      * @return void
      */
-    public function triggerAutoggestIndexing(Mage_Core_Model_Website $website) {
-        if(Mage::helper('core')->isModuleEnabled('Unbxd_Searchcore') &&
-            $this->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::AUTOSUGGEST_STATUS)) {
+    public function triggerAutoggestIndexing(Mage_Core_Model_Website $website)
+    {
+        if (Mage::helper('core')->isModuleEnabled('Unbxd_Searchcore') &&
+            $this->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::AUTOSUGGEST_STATUS)
+        ) {
             //trigger Autosuggest
-	    $response = Mage::getModel('unbxd_recscore/api_task_autosuggestindex')
-             ->prepare($website)
-             ->process();
+            $response = Mage::getModel('unbxd_recscore/api_task_autosuggestindex')
+                ->prepare($website)
+                ->process();
         }
     }
 
-    public function getCategoryExclusion(Mage_Core_Model_Website $website) {
-	$conf = Mage::helper('unbxd_recscore')->getEngineConfigData(Unbxd_Recscore_Helper_Constants::EXCLUDE_CATEGORY, $website, true);
-	$categoryExclusionConf = json_decode($conf[Unbxd_Recscore_Helper_Constants::EXCLUDE_CATEGORY], true);
-	if(!is_array($categoryExclusionConf)) {
-		return array();
-	}
-	$categoryToBeExcluded = array();
-	foreach($categoryExclusionConf as $eachExclusion) {
-		$categoryToBeExcluded[] = (string)$eachExclusion;
-	}
-	return $categoryToBeExcluded;	
+    public function getCategoryExclusion(Mage_Core_Model_Website $website)
+    {
+        $conf = Mage::helper('unbxd_recscore')->getEngineConfigData(Unbxd_Recscore_Helper_Constants::EXCLUDE_CATEGORY, $website, true);
+        $categoryExclusionConf = json_decode($conf[Unbxd_Recscore_Helper_Constants::EXCLUDE_CATEGORY], true);
+        if (!is_array($categoryExclusionConf)) {
+            return array();
+        }
+        $categoryToBeExcluded = array();
+        foreach ($categoryExclusionConf as $eachExclusion) {
+            $categoryToBeExcluded[] = (string)$eachExclusion;
+        }
+        return $categoryToBeExcluded;
     }
 
-    public function getConfigData($name) {
-	return (string)Mage::getConfig()->getNode("default/" . Unbxd_Recscore_Helper_Constants::UNBXD_CONFIG_PREFIX . "/" .$name);
+    public function getConfigData($name)
+    {
+        return (string)Mage::getConfig()->getNode("default/" . Unbxd_Recscore_Helper_Constants::UNBXD_CONFIG_PREFIX . "/" . $name);
     }
 }
+
 ?>

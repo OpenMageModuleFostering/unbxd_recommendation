@@ -425,7 +425,7 @@ function( $,
       loadFeedStatus:function( ractiveCatalog ){
          Utils.feedStatus()
          .then(function( data ){
-          if( data.success )
+          if( data.success && data.lastUpload )
             ractiveCatalog.set({
                dataSuccessMsg:"Successfully uploaded",
                lastSyncTime : data.lastUpload 
