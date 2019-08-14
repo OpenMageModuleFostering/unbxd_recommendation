@@ -52,6 +52,10 @@ class Unbxd_Recscore_Model_Observer {
         }
         $items = $payment->getOrder()->getItemsCollection();
 
+        if($items instanceof Varien_Data_Collection) {
+            return $this;
+        }
+
         foreach($items as $item) {
             if($item instanceof Mage_Sales_Model_Order) {
                 Mage::helper('unbxd_recscore')
@@ -59,6 +63,9 @@ class Unbxd_Recscore_Model_Observer {
                 continue;
             }
             $product =$item->getProduct();
+            if($product instanceof Mage_Catalog_Model_Product) {
+                return $this;
+            }
             $response = Mage::getModel('unbxd_recscore/api_task_trackorder')
                 ->setData('data',
                     array('visit_type' => 'repeat',
@@ -84,14 +91,19 @@ class Unbxd_Recscore_Model_Observer {
      * @param Varien_Event_Observer $observer
      * @return $this
      */
-    public function syncFull(Varien_Event_Observer $observer)
+    public function syncFull($observer)
     {
 	if(!Mage::helper('unbxd_recscore')->isExecutable()) {
                   return;
         }
         $websiteCollection = Mage::getModel('core/website')->getCollection()->load();
-
+        if($websiteCollection instanceof Varien_Data_Collection) {
+            return $this;
+        }
         foreach ($websiteCollection as $website) {
+            if($website instanceof Mage_Core_Model_Website) {
+                return $this;
+            }
             Mage::getResourceModel('unbxd_recscore/config')
                 ->setValue($website->getWebsiteId(), Unbxd_Recscore_Helper_Constants::IS_CRON_ENABLED, 1);
             Mage::getSingleton('unbxd_recscore/feed_feedmanager')->process(true, $website);
@@ -104,16 +116,22 @@ class Unbxd_Recscore_Model_Observer {
      * @param Varien_Event_Observer $observer
      * @return $this
      */
-    public function syncIncremental(Varien_Event_Observer $observer)
+    public function syncIncremental($observer)
     {
         if(!Mage::helper('unbxd_recscore')->isExecutable()) {
                   return;
         }
         $websiteCollection = Mage::getModel('core/website')->getCollection()->load();
+        if($websiteCollection instanceof Varien_Data_Collection) {
+            return $this;
+        }
         foreach ($websiteCollection as $website) {
-           Mage::getResourceModel('unbxd_recscore/config')
+            if($website instanceof Mage_Core_Model_Website) {
+                return $this;
+            }
+            Mage::getResourceModel('unbxd_recscore/config')
                ->setValue($website->getWebsiteId(), Unbxd_Recscore_Helper_Constants::IS_CRON_ENABLED, 1);
-           Mage::getSingleton('unbxd_recscore/feed_feedmanager')->process(false, $website);
+            Mage::getSingleton('unbxd_recscore/feed_feedmanager')->process(false, $website);
        }
        return $this;
    }
@@ -124,15 +142,26 @@ class Unbxd_Recscore_Model_Observer {
      * @return void
      */
     public function trackDelete(Varien_Event_Observer $observer) {
-	if(!Mage::helper('unbxd_recscore')->isExecutable()) {
-                   return;
-         }
+	    if(!Mage::helper('unbxd_recscore')->isExecutable()) {
+            return $this;
+        }
         $product = $observer->getEvent()->getDataObject();
+        if(!$product instanceof Mage_Catalog_Model_Product) {
+            return $this;
+        }
         $parentIds = Mage::getModel('catalog/product_type_grouped')->getParentIdsByChild($product->getId());
         if(!$parentIds)
             $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+
+        if(!is_array($parentIds)) {
+            return $this;
+        }
+
         foreach($parentIds as $parentId) {
             $parentProduct = Mage::getModel('catalog/product')->load($parentId);
+            if($parentProduct instanceof Mage_Catalog_Model_Product) {
+                return $this;
+            }
             Mage::getSingleton('unbxd_recscore/sync')->addProduct($parentProduct);
         }
         Mage::getSingleton('unbxd_recscore/sync')->deleteProduct($product);
@@ -146,17 +175,23 @@ class Unbxd_Recscore_Model_Observer {
       */
 
     public function catalogInventorySave(Varien_Event_Observer $observer) {
-	if(!Mage::helper('unbxd_recscore')->isExecutable()) {
-                   return;
-         }
-        $_item = $observer->getEvent()->getItem()->getProduct();
-	 Mage::helper('unbxd_recscore')->log(Zend_Log::ERR, 'product id is '. $_item->getData("entity_id"));
-        Mage::getSingleton('unbxd_recscore/sync')->addProduct($_item);
+	    if(!Mage::helper('unbxd_recscore')->isExecutable()) {
+            return;
+        }
+        $_item = $observer->getEvent()->getItem();
+        if(!$_item instanceof Mage_Catalog_Order_Item) {
+            return $this;
+        }
+        $product = $_item->getProduct();
+        if(!$product instanceof Mage_Catalog_Model_Product) {
+            return $this;
+        }
+        Mage::getSingleton('unbxd_recscore/sync')->addProduct($product);
         return $this;
     }
 
     public function saleOrderCancel(Varien_Event_Observer $observer) {
-
+        return $this;
     }
 }
 ?>

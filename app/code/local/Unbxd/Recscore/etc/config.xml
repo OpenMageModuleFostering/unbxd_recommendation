@@ -1,7 +1,7 @@
 <config>
 	<modules>
 		<Unbxd_Recscore>
-			<version>1.0.20</version>
+			<version>1.0.21</version>
 		</Unbxd_Recscore>
 	</modules>
     <admin>

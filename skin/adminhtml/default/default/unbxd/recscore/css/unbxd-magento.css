@@ -28,6 +28,10 @@
 	pointer-events: none;
 	border: 0;
 }
+ul.magento-nav .magento-active:last-child{
+	pointer-events: auto;
+	cursor: pointer;
+}
 .site-key-help {
 	display: none;
 	top: 329px;

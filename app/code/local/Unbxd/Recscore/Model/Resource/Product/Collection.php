@@ -13,16 +13,6 @@ class Unbxd_Recscore_Model_Resource_Product_Collection extends
     }
 
     /**
-     * Join Product Price Table | Ensuring left join happens
-     *
-     * @return Mage_Catalog_Model_Resource_Product_Collection
-     */
-    protected function _productLimitationJoinPrice()
-    {
-        return $this->_productLimitationPrice(true);
-    }
-
-    /**
      * Merge colle
      * @param $collection1
      * @param $collection2
@@ -88,8 +78,9 @@ class Unbxd_Recscore_Model_Resource_Product_Collection extends
             ->addWebsiteFilter($website->getWebsiteId())
             ->joinField("qty", $_catalogInventoryTable, 'qty', 'product_id=entity_id', null, 'left')
             ->addAttributeToSelect('*')
+            ->addAttributeToFilter('status',1)
             ->addCategoryIds()
-	    ->addAttributeToFilter('visibility',$visiblityCondition)
+	        ->addAttributeToFilter('visibility',$visiblityCondition)
             ->addPriceData(Mage_Customer_Model_Group::NOT_LOGGED_IN_ID, $website->getWebsiteId());
 
         if (!Mage::helper('unbxd_recscore')
