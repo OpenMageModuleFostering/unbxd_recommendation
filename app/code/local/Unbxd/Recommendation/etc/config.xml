@@ -1,7 +1,7 @@
 <config>
 	<modules>
 		<Unbxd_Recommendation>
-			<version>1.0.16</version>
+			<version>1.0.17</version>
 		</Unbxd_Recommendation>
 	</modules>
     <admin>
@@ -60,6 +60,9 @@
                     <field>
                         <table>unbxd_field_conf</table>
                     </field>
+                    <sync>
+                        <table>unbxd_product_sync</table>
+                    </sync>
 				</entities>
 			</unbxd_recommendation_resource>
 		</models>
@@ -87,6 +90,42 @@
 					</unbxd_recommendation_order_tracker>
 				</observers>
 			</sales_order_payment_place_end>
+            <catalog_product_delete_before>
+                <observers>
+                    <unbxd_recommendation_order_tracker>
+                        <type>singleton</type>
+                        <class>unbxd_recommendation/observer</class>
+                        <method>trackDeleteOfChildProduct</method>
+                    </unbxd_recommendation_order_tracker>
+                </observers>
+            </catalog_product_delete_before>
+            <catalog_product_delete_commit_after>
+                <observers>
+                    <unbxd_recommendation_order_tracker>
+                        <type>singleton</type>
+                        <class>unbxd_recommendation/observer</class>
+                        <method>trackDeleteOfMainProduct</method>
+                    </unbxd_recommendation_order_tracker>
+                </observers>
+            </catalog_product_delete_commit_after>
+            <cataloginventory_stock_item_save_commit_after>
+                <observers>
+                    <unbxd_recommendation_catalog_inventory_save>
+                        <type>singleton</type>
+                        <class>unbxd_recommendation/observer</class>
+                        <method>catalogInventorySave</method>
+                    </unbxd_recommendation_catalog_inventory_save>
+                </observers>
+            </cataloginventory_stock_item_save_commit_after>
+            <sales_order_item_cancel>
+                <observers>
+                    <unbxd_recommendation_order_cancel>
+                        <type>singleton</type>
+                        <class>unbxd_recommendation/observer</class>
+                        <method>catalogInventorySave</method>
+                    </unbxd_recommendation_order_cancel>
+                </observers>
+            </sales_order_item_cancel>
 		</events>
 	</global>
     <adminhtml>
@@ -106,4 +145,11 @@
             </unbxd_recommendation_cron>
         </jobs>
     </crontab>
+    <default>
+        <unbxd>
+            <general>
+                <max_feed_lock_feed>6</max_feed_lock_feed>
+            </general>
+        </unbxd>
+    </default>
 </config>

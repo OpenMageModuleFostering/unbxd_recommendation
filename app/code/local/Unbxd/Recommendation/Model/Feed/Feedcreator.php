@@ -3,47 +3,80 @@
 class Unbxd_Recommendation_Model_Feed_Feedcreator {
 
 	var $fileName;
-
 	var $fields;
 	var $taxonomyFlag;
 	const PAGE_SIZE = 500;
+    var $_fullupload;
+
+
+    public function __construct() {
+        $this->_fullupload = true;
+    }
 
 	public function init(Mage_Core_Model_Website $website, $fileName) {
-        $this->setFields($website);
+        $this->_setFields($website);
         $this->fileName = $fileName;
 	}
 
+    /**
+     * Method to set the full upload
+     * @param bool $value
+     * @return void
+     */
+    public function setFullUpload($value = true) {
+        if($value === false) {
+            $this->_fullupload = false;
+        }
+        return $this;
+    }
+
+    /**
+     * Method to check whether is full upload or not
+     * @return mixed
+     */
+    public function isFullUpload() {
+        return $this->_fullupload;
+    }
 
 	/**
  	* method to create the feed
  	**/
- 	public function createFeed($fileName, $fromdate, $todate, Mage_Core_Model_Website $website, $operation, $ids){
+ 	public function createFeed($fileName,  Mage_Core_Model_Website $website, $fromDate, $currentDate){
  		$this->init($website, $fileName);
- 		if($this->createFile()){
+ 		if($this->_createFile()){
  			$this->log("started writing header");
  			
- 			if(!$this->writeFeedContent($fromdate,$todate,$website,$operation,$ids)){
+ 			if(!$this->_writeFeedContent($website, $fromDate, $currentDate)){
  				return false;
  			}
  			
  		} else {
  			return false;
  		}
- 		return true;
+     	return true;
  	}
 
- 	private function writeFeedContent($fromdate,$todate,Mage_Core_Model_Website $website,$operation,$ids) {
- 		if(!$this->appendTofile('{"feed":')) {
+    /**
+     * Method to trigger write the feed contents
+     * @param $fromdate
+     * @param $todate
+     * @param Mage_Core_Model_Website $website
+     * @param $operation
+     * @param $ids
+     * @return bool
+     */
+    protected  function _writeFeedContent(Mage_Core_Model_Website $website, $fromDate, $currentDate) {
+ 		if(!$this->_appendTofile('{"feed":')) {
  			$this->log("Error writing feed tag");
  			return false;
  		}
 
- 		if(!$this->writeCatalogContent($fromdate,$todate,$website,$operation,$ids)) {
+ 		if(!$this->_writeCatalogContent($website, $fromDate, $currentDate)) {
  			$this->log("Error writing catalog tag");
  			return false;
  		}
 
- 		if(!$this->appendTofile("}")) {
+ 		if(!$this->_appendTofile("}")) {
  			$this->log("Error writing closing feed tag");
  			return false;
  		}
@@ -51,106 +84,206 @@ class Unbxd_Recommendation_Model_Feed_Feedcreator {
  		return true;
  	}
 
- 	private function writeCatalogContent($fromdate,$todate,Mage_Core_Model_Website $website,$operation,$ids) {
- 		if(!$this->appendTofile('{"catalog":{')) {
+    /**
+     * Method to trigger only the catalog content
+     * @param Mage_Core_Model_Website $website
+     * @param $operation
+     * @param $ids
+     * @return bool
+     */
+    protected  function _writeCatalogContent(Mage_Core_Model_Website $website, $fromDate, $currentDate) {
+ 		if(!$this->_appendTofile('{"catalog":{')) {
  			$this->log("Error writing closing catalog tag");
  			return false;
  		}
- 		if(!$this->writeSchemaContent()) {
+ 		if(!$this->_writeSchemaContent()) {
  			return false;
  		}
 
- 		if(!$this->appendTofile(",")) {
+ 		if(!$this->_appendTofile(",")) {
  			$this->log("Error while adding comma in catalog");
  			return false;
  		}
 
- 		if(!$this->writeProductsContent($fromdate,$todate,$website,$operation,$ids)) {
+        // If both of them are unsuccessful, then tag it as unsuccessful
+ 		if(!($this->_writeAddProductsContent($website, $fromDate, $currentDate)
+            || $this->_writeDeleteProductsContent($website, $fromDate, $currentDate))) {
  			return false;
  		}
 
 
- 		if(!$this->appendTofile("}")) {
+
+ 		if(!$this->_appendTofile("}")) {
  			$this->log("Error writing closing catalog tag");
  			return false;
  		}
         /*
- 		if(!$this->writeTaxonomyContents($site)) {
+ 		if(!$this->_writeTaxonomyContents($site)) {
  			return false;
  		}*/
 
- 		if(!$this->appendTofile("}")) {
+ 		if(!$this->_appendTofile("}")) {
  			$this->log("Error writing closing feed tag");
  			return false;
  		}
 
-
  		return true;
  	}
 
- 	private function writeSchemaContent() {
- 		return $this->appendTofile('"schema":'.
+    /**
+     * Method to trigger to write the schema content
+     * @return mixed
+     */
+    protected  function _writeSchemaContent() {
+ 		return $this->_appendTofile('"schema":'.
             Mage::getSingleton('unbxd_recommendation/feed_jsonbuilder_schemabuilder')->getSchema($this->fields));
  	}
 
- 	private function writeProductsContent($fromdate,$todate,Mage_Core_Model_Website $website,$operation,$ids) {
- 		
- 		$collection = $this->getCatalogCollection($fromdate,$todate,$website,$operation,$ids);
-	    // get total size
- 		//set the time limit to infinite
- 		ignore_user_abort(true);
- 		set_time_limit(0);
-		$pageNum = 0;	
-		$this->log('started writing products');
+    /**
+     * method to get the collection to add
+     * @param Mage_Core_Model_Website $website
+     * @param $currentDate
+     * @return mixed
+     */
+    protected  function _getCatalogCollectionToAdd(Mage_Core_Model_Website $website, $fromDate, $currentDate) {
+        if($this->isFullUpload()) {
+            return Mage::getResourceModel('unbxd_recommendation/product_collection')
+                ->addFullUploadFilters($website);
+        } else {
+            $products = Mage::getModel('unbxd_recommendation/sync')
+                ->getCollection()
+                ->addWebsiteFilter($website->getWebsiteId())
+                ->addUnsyncFilter()
+                ->addOperationFilter(Unbxd_Recommendation_Model_Sync::OPERATION_ADD)
+                ->load();
+            $productIds = array();
+            foreach($products as $product) {
+                $productIds[] = $product->getProductId();
+            }
+            return Mage::getResourceModel('unbxd_recommendation/product_collection')
+                ->addIncrementalUploadFiltersToAdd($website, $fromDate, $currentDate, $productIds);
+        }
+    }
 
-		if(!$this->appendTofile('"'. $operation . '":{ "items":[')) {
-			$this->log("Error while adding items tag");
- 			return false;
-		}
+    protected function _getCatalogCollectionToDelete(Mage_Core_Model_Website $website) {
+        $products = Mage::getModel('unbxd_recommendation/sync')
+            ->getCollection()
+            ->addWebsiteFilter($website->getWebsiteId())
+            ->addUnsyncFilter()
+            ->addOperationFilter(Unbxd_Recommendation_Model_Sync::OPERATION_DELETE)
+            ->load();
+        $collection = Mage::getResourceModel('unbxd_recommendation/product_collection');
+        foreach($products as $eachProduct) {
+            $product = new Mage_Catalog_Model_Product();
+            $product->setEntityId($eachProduct->getProductId());
+            $collection->addItem($product);
+        }
+        return $collection;
+    }
 
-		$firstLoop = true;
+    protected function _writeDeleteProductsContent(Mage_Core_Model_Website $website, $fromDate, $currentDate) {
+        if($this->isFullUpload()) {
+           return true;
+        }
+        $collection1 = $this->_getCatalogCollectionToDelete($website);
+        $collection2 = Mage::getResourceModel('unbxd_recommendation/product_collection')
+            ->addIncrementalUploadFiltersToDelete($website, $fromDate, $currentDate)
+            ->load();
 
-		while(true){	
-			$collection->clear();
-			$collection->getSelect()->limit(self::PAGE_SIZE, ($pageNum++) * self::PAGE_SIZE);
-			$collection->load();
-            Mage::getModel('cataloginventory/stock_status')->addStockStatusToProducts($collection);
-			if(count($collection) == 0){
-				if($pageNum == 1){
-					$this->log("No products found");
-					return false;
-				}
-				break;
-			}
+        $collection = $collection1
+            ->mergeCollection($collection2)
+            ->virtuallyLoad();
+        return $this->_writeProducts($website, $collection, Unbxd_Recommendation_Model_Feed_Tags::DELETE, true);
+    }
 
-			if(!$firstLoop) {
-				if(!$this->appendTofile( ',')) {
-					$this->log("Error while addings items separator");
-	 				return false;
-				}
-			}
- 			$content = Mage::getSingleton('unbxd_recommendation/feed_jsonbuilder_productbuilder')
-                ->getProducts($website, $collection, $this->fields);
-			$status=$this->appendTofile($content);
-    		if(!$status){
-    			$this->log("Error while addings items");
-    			return false;
-    		}
-	    	$this->log('Added '.($pageNum) * self::PAGE_SIZE.' products');
-	    	$firstLoop = false;
- 		}
 
- 		if(!$this->appendTofile("]}")) {
- 			$this->log("Error writing closing items tag");
- 			return false;
- 		}
 
-		
- 		$this->log('Added all products');
- 		return true;
+    /**
+     * Method to trigger to write the products
+     * @param Mage_Core_Model_Website $website
+     * @param $operation
+     * @param $ids
+     * @return bool
+     */
+    protected function _writeAddProductsContent(Mage_Core_Model_Website $website, $fromDate, $currentDate) {
+        $collection = $this->_getCatalogCollectionToAdd($website, $fromDate, $currentDate);
+        return $this->_writeProducts($website, $collection);
+
  	}
 
- 	private function writeTaxonomyContents($site){
+    /**
+     * Method to process the collection
+     * @param $collection
+     * @param $pageNum
+     * @param string $operation
+     * @param bool $loadAll
+     * @return mixed
+     */
+     protected function _processCollection($collection , $pageNum,
+                                       $operation = Unbxd_Recommendation_Model_Feed_Tags::ADD, $loadAll = false) {
+        if(!$loadAll) {
+            $collection->clear();
+            $collection->getSelect()->limit(self::PAGE_SIZE, ($pageNum) * self::PAGE_SIZE);
+            $collection->load();
+        }
+        if($operation == Unbxd_Recommendation_Model_Feed_Tags::ADD) {
+            Mage::getModel('cataloginventory/stock_status')->addStockStatusToProducts($collection);
+        }
+        return $collection;
+    }
+
+    protected function _writeProducts(Mage_Core_Model_Website $website, $collection,
+                                      $operation = Unbxd_Recommendation_Model_Feed_Tags::ADD, $loadAllAtOnce = false) {
+        $pageNum = 0;
+        $this->log('started writing products');
+        $firstLoop = true;
+        while(true){
+            $collection = $this->_processCollection($collection, $pageNum++ , $operation, $loadAllAtOnce);
+
+            if(count($collection) == 0){
+                if($pageNum == 1){
+                    $this->log("No products found");
+                    throw new Exception("No Products found");
+                }
+                break;
+            }
+
+            if(!$firstLoop && $loadAllAtOnce) {
+                break;
+            } else if(!$firstLoop) {
+                if(!$this->_appendTofile(Unbxd_Recommendation_Model_Feed_Tags::COMMA)) {
+                    $this->log("Error while addings items separator");
+                    return false;
+                }
+            } else {
+                // If it is the first loop adding json tag
+                if(!$this->_appendTofile(Mage::getSingleton('unbxd_recommendation/feed_tags')->getKey($operation) .
+                    Unbxd_Recommendation_Model_Feed_Tags::COLON. Unbxd_Recommendation_Model_Feed_Tags::OBJ_START.
+                    Mage::getSingleton('unbxd_recommendation/feed_tags')->getKey($operation) .
+                    Unbxd_Recommendation_Model_Feed_Tags::COLON.Unbxd_Recommendation_Model_Feed_Tags::ARRAY_START)) {
+                    $this->log("Error while adding items tag");
+                    return false;
+                }
+            }
+            $content = Mage::getSingleton('unbxd_recommendation/feed_jsonbuilder_productbuilder')
+                ->getProducts($website, $collection, $this->fields);
+            if(!$this->_appendTofile($content)){
+                $this->log("Error while addings items");
+                return false;
+            }
+            $this->log('Added '.($pageNum) * self::PAGE_SIZE.' products');
+            $firstLoop = false;
+        }
+        if(!$this->_appendTofile(Unbxd_Recommendation_Model_Feed_Tags::ARRAY_END .
+            Unbxd_Recommendation_Model_Feed_Tags::OBJ_END)) {
+            $this->log("Error writing closing items tag");
+            return false;
+        }
+        $this->log('Added all products');
+        return true;
+    }
+
+ 	protected  function _writeTaxonomyContents($site){
 
  		$collection=$this->getTaxonomyMappingCollection();
 	    // get total size
@@ -160,38 +293,39 @@ class Unbxd_Recommendation_Model_Feed_Feedcreator {
 		$pageNum = 0;	
 		$this->log('started writing taxonomy tree');
 
-		if(!$this->appendTofile(',"'. 'taxonomy' . '":{ "tree":[')) {
+		if(!$this->_appendTofile(',"'. 'taxonomy' . '":{ "tree":[')) {
 			$this->log("Error while adding tree tag");
  			return false;
 		}
 
- 			$content=Mage::getSingleton('unbxd_recommendation/feed_jsonbuilder_taxonomybuilder')->createTaxonomyFeed($site);
-			$status=$this->appendTofile($content);
+        $content=Mage::getSingleton('unbxd_recommendation/feed_jsonbuilder_taxonomybuilder')
+            ->createTaxonomyFeed($site);
+        $status=$this->_appendTofile($content);
 
-			if(!$status){
-    			$this->log("Error while addings taxonomy");
-    			return false;
-    		}
+        if(!$status){
+            $this->log("Error while addings taxonomy");
+            return false;
+        }
 
-    		if(!$this->appendTofile("]")) {
- 			$this->log("Error writing closing tree tag");
- 			return false;
+        if(!$this->_appendTofile("]")) {
+            $this->log("Error writing closing tree tag");
+            return false;
  		}
 
- 			if(!$this->appendTofile(',"mapping":[')) {
+ 		if(!$this->_appendTofile(',"mapping":[')) {
  			$this->log("Error writing opening mapping tag");
  			return false;
  		}
 
-    		$content=Mage::getSingleton('unbxd_recommendation/feed_jsonbuilder_taxonomybuilder')->createMappingFeed($collection);
-    		$status=$this->appendTofile($content);
+        $content=Mage::getSingleton('unbxd_recommendation/feed_jsonbuilder_taxonomybuilder')->createMappingFeed($collection);
+        $status=$this->_appendTofile($content);
 
-    		if(!$status){
-    			$this->log("Error while addings taxonomy");
-    			return false;
-    		}
+        if(!$status){
+            $this->log("Error while addings taxonomy");
+            return false;
+        }
 
-    		if(!$this->appendTofile(']}')) {
+        if(!$this->appendTofile(']}')) {
  			$this->log("Error writing closing mapping tag");
  			return false;
  		}
@@ -200,9 +334,7 @@ class Unbxd_Recommendation_Model_Feed_Feedcreator {
  	}
 
 
-
-
- 	private function setFields(Mage_Core_Model_Website $website) {
+ 	protected function _setFields(Mage_Core_Model_Website $website) {
         $fields = Mage::getResourceModel("unbxd_recommendation/field_collection")->getFields($website);
         $featureFields = Mage::getModel('unbxd_recommendation/field')->getFeaturedFields();
         foreach($fields as $eachfield) {
@@ -227,49 +359,14 @@ class Unbxd_Recommendation_Model_Feed_Feedcreator {
 
 	}
 
-	/**
- 	* method to get the catalog collection
- 	* 
- 	*/
- 	public function getCatalogCollection($fromdate,$todate,Mage_Core_Model_Website $website,$operation,$ids) {
-        if ($operation == "add") {
-            $adapter = Mage::getSingleton("core/resource");
-            $_catalogInventoryTable = method_exists($adapter, 'getTableName')
-                ? $adapter->getTableName('cataloginventory_stock_item'): 'catalog_category_product_index';
-            $collection = Mage::getResourceModel('unbxd_recommendation/product_collection')
-                ->addWebsiteFilter($website->getWebsiteId())
-                ->joinField("qty", $_catalogInventoryTable, 'qty', 'product_id=entity_id', null, 'left')
-                ->addAttributeToSelect('*')
-                ->addCategoryIds()
-                ->addPriceData(Mage_Customer_Model_Group::NOT_LOGGED_IN_ID, $website->getWebsiteId());
-
-            Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($collection);
-            Mage::getSingleton('catalog/product_visibility')->addVisibleInSiteFilterToCollection($collection);
-
-            if(sizeof($ids) > 0){
-                $condition = array('in' => $ids);
-                $collection=$collection->addAttributeToFilter('entity_id',$condition);
-            }
-		} else {
-            $collection = Mage::getResourceModel('catalog/product_collection');
-            if(sizeof($ids) > 0) {
-                $condition = array('in' => $ids);
-                $collection= $collection->addAttributeToFilter('entity_id',$condition)->addAttributeToSelect('entity_id');
-            }
-        }
-
-        $this->log((string)$collection->getSelect());
-        return $collection;
- 	}
-
  	/**
  	 * Function to initialize to feed creation process
  	 */
- 	protected  function createFile(){
+ 	protected  function _createFile(){
  		return Mage::getSingleton('unbxd_recommendation/feed_filemanager')->createFile($this->fileName);
  	}
 
-    protected function appendTofile($data){
+    protected function _appendTofile($data){
  		return Mage::getSingleton('unbxd_recommendation/feed_filemanager')->appendTofile($this->fileName, $data);
  	}
 

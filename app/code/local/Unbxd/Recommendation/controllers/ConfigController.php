@@ -289,9 +289,15 @@ class Unbxd_Recommendation_ConfigController extends Mage_Core_Controller_Front_A
         if (is_null($website)) {
             return;
         }
-        $fromdate="1970-01-01 00:00:01";
+        ignore_user_abort(true);
+        set_time_limit(0);
+        $isFullUpload = true;
+        $feedMgr = Mage::getSingleton('unbxd_recommendation/feed_feedmanager');
+        if(array_key_exists('incremental', $_REQUEST)) {
+            $isFullUpload = false;
+        }
 
-        $response = Mage::getSingleton('unbxd_recommendation/feed_feedmanager')->process($fromdate,$website);
+        $response = $feedMgr->process($isFullUpload, $website);
         $this->getResponse()->setBody(json_encode($response));
         return;
     }

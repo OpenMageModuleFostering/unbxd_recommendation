@@ -11,15 +11,11 @@ class Unbxd_Recommendation_Model_Feed_Feedmanager {
 
     var $siteName;
 
-    const LAST_UPLOAD_TIME = 'lastUpload';
-
 	/**
  	* method to push the feed to the Unbxd server
  	**/
-    public function pushFeed($fullimport=true){
+    protected function _pushFeed($fullimport=true){
         $fields=array('file'=>'@'.$this->fileName.';filename='.'unbxdFeed.json');
-        $header = array('Content-Type: multipart/form-data');
-
         $url="http://feed.unbxdapi.com/upload/v2/".$this->key."/".$this->siteName. ($fullimport?"?fullimport=true":"");
 
         $ch = curl_init();
@@ -44,7 +40,7 @@ class Unbxd_Recommendation_Model_Feed_Feedmanager {
         return true;
     }
 
- 	public function exec($ch)
+ 	protected function exec($ch)
     {
         $response = curl_exec($ch);
         $error = curl_error($ch);
@@ -69,9 +65,10 @@ class Unbxd_Recommendation_Model_Feed_Feedmanager {
  	/**
 	* method to set the feedName, log, apikey based on site Name
 	**/
-	public function init(Mage_Core_Model_Website $website)
+	public function init(Mage_Core_Model_Website $website, $isFullUpload)
 	{
-		$this->fileName = Mage::getBaseDir('tmp').DS.str_replace(' ', '_', $website->getName()). "_Feed.json";
+		$this->fileName = Mage::getBaseDir('tmp').DS.str_replace(' ', '_', $website->getName()).
+            "_Feed" . (!$isFullUpload?round(microtime(true) * 1000):'') .  ".json";
         $this->key = Mage::getResourceModel("unbxd_recommendation/config")
             ->getValue($website->getWebsiteId(), Unbxd_Recommendation_Helper_Confighelper::SECRET_KEY);
         $this->siteName = Mage::getResourceModel("unbxd_recommendation/config")
@@ -108,40 +105,64 @@ class Unbxd_Recommendation_Model_Feed_Feedmanager {
 	/**
  	* method to initiate feed uploading to the unbxd servers
  	**/
- 	public function process($fromdate, Mage_Core_Model_Website $website, $operation = "add", $ids=array()){
+ 	public function process($isFullUpload = true, Mage_Core_Model_Website $website){
 	 	
 		$this->log('Feed Uploading request recieved');
-        $response = $this->init($website);
+        $response = $this->init($website, $isFullUpload);
 		if(is_array($response)){
 			return $response;
 		}
  		$currentDate = date('Y-m-d H:i:s');
 
  		// check the lock, that if already indexing is happening
- 		if(!Mage::getResourceModel("unbxd_recommendation/config")->isLock($website->getWebsiteId())) {
+ 		if(!$isFullUpload ||
+            !Mage::getResourceModel("unbxd_recommendation/config")->isLock($website->getWebsiteId())) {
+
+            $fromDate = Mage::getResourceSingleton('unbxd_recommendation/config')
+                ->getValue($website->getWebsiteId(), Unbxd_Recommendation_Model_Config::LAST_UPLOAD_TIME);
+            if(is_null($fromDate)) {
+                $fromDate = "1970-01-01 00:00:00";
+            }
 
             $this->log('site '. $website->getName() .' is acquiring feed lock');
-            Mage::getResourceModel('unbxd_recommendation/config')->lockSite($website->getWebsiteId());
+            if($isFullUpload) {
+                Mage::getResourceModel('unbxd_recommendation/config')->lockSite($website->getWebsiteId());
+            }
 
 		 	// create the feed
-	 		$status=Mage::getSingleton('unbxd_recommendation/feed_feedcreator')
-	 					->createFeed($this->fileName, $fromdate, $currentDate, $website, $operation, $ids);
+            try {
+                $status = Mage::getSingleton('unbxd_recommendation/feed_feedcreator')
+                    ->setFullUpload($isFullUpload)
+                        ->createFeed($this->fileName, $website, $fromDate, $currentDate);
+            } catch (Exception $e) {
+                $this->log('Caught exception: '. $e->getMessage());
+                return array('success' => false, 'message' => $e->getMessage());
+            }
             $this->log('unbxd Datafeeder finished creating file');
 	
 	 		if($status){ 		
-                $status=$this->pushFeed();
+                $status=$this->_pushFeed($isFullUpload);
 		 		if($status){
 			 		Mage::getResourceSingleton("unbxd_recommendation/config")
-                        ->setValue($website->getWebsiteId(), self::LAST_UPLOAD_TIME, $currentDate);
+                        ->setValue($website->getWebsiteId(),
+                            Unbxd_Recommendation_Model_Config::LAST_UPLOAD_TIME, $currentDate);
+                    $this->updateFeatureFields($website);
 		 		}
 	 		}
 
-	 		// unlock the feed once everything is completed
-            Mage::getResourceModel('unbxd_recommendation/config')->unLockSite($website->getWebsiteId());
-            $this->updateFeatureFields($website);
+            if($isFullUpload) {
+                // unlock the feed once everything is completed
+                Mage::getResourceModel('unbxd_recommendation/config')->unLockSite($website->getWebsiteId());
+            }  else {
+                //In case of incremental feed delete the feed
+                Mage::getSingleton('unbxd_recommendation/feed_filemanager')->deleteFile($this->fileName);
+            }
+
 		 	$this->log('site ' . $website->getName() .' has been unlocked');
             if($status) {
-              return array('success' => true, 'message' => 'File uploaded successfully');
+                Mage::getModel('unbxd_recommendation/sync')
+                    ->markItSynced($website->getWebsiteId(), $fromDate, $currentDate);
+                return array('success' => true, 'message' => 'File uploaded successfully');
             }
             return array('success' => false, 'message' => 'Unexpected error, please contact support');
  		} else {

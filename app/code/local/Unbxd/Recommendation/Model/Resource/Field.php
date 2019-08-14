@@ -26,6 +26,8 @@ class Unbxd_Recommendation_Model_Resource_Field extends Mage_Core_Model_Mysql4_A
 
     const CATEGORY_IDS_NAME = "categoryIds";
 
+    const CATEGORY_IDS = "category_ids";
+
     const CATEGORY_NAME = "category";
 
     const AVAILABILITY = 'availability';

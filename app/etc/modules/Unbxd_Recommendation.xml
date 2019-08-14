@@ -1,8 +1,12 @@
 <config>
     <modules>
-      <Unbxd_Recommendation>
-           <active>true</active>
-           <codePool>local</codePool>
-       </Unbxd_Recommendation>
+        <Unbxd_Core>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Unbxd_Core>
+        <Unbxd_Recommendation>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Unbxd_Recommendation>
     </modules>
 </config>

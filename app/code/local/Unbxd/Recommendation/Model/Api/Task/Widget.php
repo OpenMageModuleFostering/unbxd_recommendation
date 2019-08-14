@@ -12,7 +12,9 @@ class Unbxd_Recommendation_Model_Api_Task_Widget extends Unbxd_Recommendation_Mo
 
     const jsonResponse = false;
 
-    public static $WIDGET_TYPES = array('recommend' => 'unbxd_recommended_for_you',
+    public static $WIDGET_TYPES = array(
+        'recommend' => 'unbxd_recommended_for_you',
+        'recommend' => 'unbxd_recommended_for_you',
         'recently-viewed' =>'unbxd_recently_viewed',
         'more-like-these' => 'unbxd_more_like_these',
         'also-bought' =>'unbxd_also_bought',
@@ -21,6 +23,7 @@ class Unbxd_Recommendation_Model_Api_Task_Widget extends Unbxd_Recommendation_Mo
         'category-top-sellers' => 'unbxd_category_top_sellers',
         'brand-top-sellers' => 'unbxd_brand_top_sellers',
         'pdp-top-sellers' => 'unbxd_pdp_top_sellers',
+        'brand-top-sellers' => 'unbxd_brand_top_sellers',
         'cart-recommend' => 'unbxd_cart_recommendations');
 
     public function prepare(Mage_Core_Model_Website $website) {
@@ -94,7 +97,7 @@ class Unbxd_Recommendation_Model_Api_Task_Widget extends Unbxd_Recommendation_Mo
 
         if($params[static::WIDGET_TYPE] == 'also-viewed' || $params[static::WIDGET_TYPE] == 'also-bought' ||
             $params[static::WIDGET_TYPE] == 'more-like-these' || $params[static::WIDGET_TYPE] == 'pdp-top-sellers') {
-            if(array_key_exists('uid', $params)) {
+            if(array_key_exists('pid', $params)) {
                 return $params['pid'];
             } else {
                 return '';

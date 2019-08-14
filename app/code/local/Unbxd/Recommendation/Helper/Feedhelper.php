@@ -72,50 +72,6 @@ class Unbxd_Recommendation_Helper_Feedhelper extends Unbxd_Recommendation_Helper
         return $categoryValues;
     }
 
-    public function getCatLevel2(Mage_Core_Model_Website $website, $category_ids, $catlevel1Categories = null) {
-        if(is_null($catlevel1Categories)) {
-            $catlevel1Categories = $this->getCatLevel1($website, $category_ids);
-        }
-        $catlevel1Ids = array_keys($catlevel1Categories);
-        $catlevel1 = array();
-        foreach($category_ids as $category_id) {
-            $category = $this->getCategory($category_id);
-            $parentIds = $category->getParentIds();
-
-            if(!is_null($category) &&
-                $this->array_match($category->getParentId(), $catlevel1Ids)) {
-                $catlevel1 = $catlevel1 + array($category->getId() => $category->getName());
-            } else if ($category instanceof Mage_Catalog_Model_Category && is_array($parentIds) &&
-                (sizeof($parentIds) >0)) {
-                $catlevel1 = $catlevel1 + $this->getCatLevel2($website, $parentIds, $catlevel1Categories);
-            }
-        }
-        return $catlevel1;
-    }
-
-    public function getCatLevel3(Mage_Core_Model_Website $website, $category_ids, $catlevel2Categories = null) {
-        if(is_null($catlevel2Categories)) {
-            $catlevel2Categories = $this->getCatLevel1($website, $category_ids);
-        }
-        $catlevel2Ids = array_keys($catlevel2Categories);
-        $catlevel1 = array();
-        foreach($category_ids as $category_id) {
-            $category = $this->getCategory($category_id);
-            $parentIds = $category->getParentIds();
-
-            if(!is_null($category) &&
-                $this->array_match($category->getParentId(), $catlevel2Ids)) {
-                $catlevel1 = $catlevel1 + array($category->getId() => $category->getName());
-            } else if ($category instanceof Mage_Catalog_Model_Category &&
-                is_array($parentIds) &&
-                (sizeof($parentIds) >0)) {
-                $catlevel1 = $catlevel1 + $this->getCatLevel2($website, $parentIds, $catlevel2Categories);
-            }
-        }
-        return $catlevel1;
-    }
-
-
     /**
      * method to get all the attributes
      **/
@@ -155,6 +111,7 @@ class Unbxd_Recommendation_Helper_Feedhelper extends Unbxd_Recommendation_Helper
         }
         if($this->getFieldType($attributeName) == "select" ||
             $this->getFieldType($attributeName) == "multiselect" ||
+            $attributeName == Unbxd_Recommendation_Model_Resource_Field::CATEGORY_IDS ||
             $attributeName == Unbxd_Recommendation_Model_Resource_Field::CATEGORY_IDS_NAME ||
             $attributeName == Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_1_NAME ||
             $attributeName == Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_2_NAME ||

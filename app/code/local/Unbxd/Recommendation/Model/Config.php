@@ -9,11 +9,23 @@
  */
 class Unbxd_Recommendation_Model_Config extends Mage_Core_Model_Abstract {
 
-    const key = "key";
+    const KEY = "key";
 
-    const value = 'value';
+    const VALUE = 'value';
 
-    const website_id = 'website_id';
+    const WEBSITE_ID = 'website_id';
+
+    const FEED_LOCK_TIME = 'feed_lock_time';
+
+    const FEED_LOCK = 'feed_lock';
+
+    const FEED_LOCK_TRUE = '1';
+
+    const FEED_LOCK_FALSE = '0';
+
+    const MAX_FEED_LOCK_TIME = 6;
+
+    const LAST_UPLOAD_TIME = 'lastUpload';
 
     /**
      *

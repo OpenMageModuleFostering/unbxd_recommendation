@@ -119,7 +119,7 @@ class Unbxd_Recommendation_Model_Feed_Jsonbuilder_Productbuilder extends
             if (sizeof($levelCategories) > 0) {
                 $categoryData['categoryLevel' . $level] = $levelCategories;
                 $categoryData['catLevel' . $level . 'Name'] = $levelCategories[0];
-                $category = $category + $levelCategories;
+                $category = array_merge($category, $levelCategories);
             }
         }
 

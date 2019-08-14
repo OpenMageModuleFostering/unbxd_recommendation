@@ -18,7 +18,8 @@ class Unbxd_Recommendation_Model_Observer {
             return $this;
         }
         $response = Mage::getModel('unbxd_recommendation/api_task_trackcart')
-            ->setData('data', array('pid' => Mage::helper('unbxd_recommendation/feedhelper')->getUniqueId($product),'visit_type' => 'repeat'))
+            ->setData('data', array('pid' => Mage::helper('unbxd_recommendation/feedhelper')->getUniqueId($product),
+                'visit_type' => 'repeat'))
             ->setData('ip', isset($_SERVER['HTTP_X_FORWARDED_FOR'])?$_SERVER['HTTP_X_FORWARDED_FOR']:$_SERVER['REMOTE_ADDR'])
             ->setData('agent', $_SERVER['HTTP_USER_AGENT'])
             ->prepare(Mage::app()->getWebsite())
@@ -36,7 +37,10 @@ class Unbxd_Recommendation_Model_Observer {
      * @return $this
      */
     public function trackOrder(Varien_Event_Observer $observer) {
+
         $payment = $observer->getEvent()->getPayment();
+        /* @var Mage_Sales_Model_Order_Payment */
+
         if(!$payment instanceof Mage_Sales_Model_Order_Payment) {
             Mage::helper('unbxd_recommendation')->log(Zend_Log::ERR, 'ORDER_TRACKER:payment is not a valid type');
             return $this;
@@ -49,62 +53,70 @@ class Unbxd_Recommendation_Model_Observer {
                     ->log(Zend_Log::ERR, 'ORDER_TRACKER:request failed because item is of instancetype ' . get_class($item));
                 continue;
             }
-            $type = $item->getProductType();
-
-            switch($type){
-                case 'configurable':
-                    if ($item->getHasChildren()) {
-                        $productId = $item->getProductId();
-                    }elseif($item->getParentItem() != null)	{
-                        $productId = $item->getParentItem()->getProductId();
-                    }
-                    break;
-                case 'grouped':
-                    $values=$item->getProductOptionByCode('info_buyRequest');
-                    $parentId = $values['super_product_config']['product_id'];
-                    $productId = $parentId;
-                    break;
-                case 'bundle':
-                    $productId = $item->getProductId();
-                    break;
-                case 'simple':
-                    if ($item->getParentItem() != null)	{
-                        $productId = $item->getParentItem()->getProductId();
-                    } else {
-                        $productId = $item->getProductId();
-                    }
-                    break;
-                default:
-                    $productId = $item->getProductId();
-            }
+            $product =$item->getProduct();
             $response = Mage::getModel('unbxd_recommendation/api_task_trackorder')
                 ->setData('data',
-                    array('visit_type' => 'repeat', 'pid' => $productId,
-                        'qty' => $item->getQtyOrdered(), 'price' => $item->getPriceInclTax()))
+                    array('visit_type' => 'repeat',
+                        'pid' => Mage::helper('unbxd_recommendation/feedhelper')->getUniqueId($product),
+                        'qty' => $item->getQtyOrdered(),
+                        'price' => $item->getPriceInclTax()))
                 ->setData('ip', isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'])
                 ->setData('agent', $_SERVER['HTTP_USER_AGENT'])
                 ->prepare(Mage::app()->getWebsite())
                 ->process();
+
             if ($response->isSuccess() && is_array($response->getErrors()) && sizeof($response->getErrors()) > 0) {
                 Mage::helper('unbxd_recommendation')
                     ->log(Zend_Log::ERR, 'ORDER_TRACKER:request failed because ' . json_encode($response->getErrors()));
             }
+            Mage::getSingleton('unbxd_recommendation/sync')->addProduct($product);
         }
         return $this;
 	}
 
-
-    public function syncProduct()
+    /**
+     * Method to sync the product catalog through cron
+     * @param Varien_Event_Observer $observer
+     * @return $this
+     */
+    public function syncProduct(Varien_Event_Observer $observer)
     {
         $websiteCollection = Mage::getModel('core/website')->getCollection()->load();
 
         foreach ($websiteCollection as $website) {
             Mage::getResourceModel('unbxd_recommendation/config')
                 ->setValue($website->getWebsiteId(), Unbxd_Recommendation_Helper_Confighelper::IS_CRON_ENABLED, 1);
-            $fromdate = "1970-01-01 00:00:01";
-            Mage::getSingleton('unbxd_recommendation/feed_feedmanager')->process($fromdate, $website);
+            Mage::getSingleton('unbxd_recommendation/feed_feedmanager')->process($website);
         }
         return $this;
+    }
+
+    /**
+     * Method to track deleted product
+     * @param Varien_Event_Observer $observer
+     * @return void
+     */
+    public function trackDeleteOfChildProduct(Varien_Event_Observer $observer) {
+        $product = $observer->getEvent()->getDataObject();
+        $parentIds = Mage::getModel('catalog/product_type_grouped')->getParentIdsByChild($product->getId());
+        if(!$parentIds)
+            $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+        foreach($parentIds as $parentId) {
+            $parentProduct = Mage::getModel('catalog/product')->load($parentId);
+            Mage::getSingleton('unbxd_recommendation/sync')->addProduct($parentProduct);
+        }
+        Mage::getSingleton('unbxd_recommendation/sync')->deleteProduct($product);
+        return $this;
+    }
+
+    public function catalogInventorySave(Varien_Event_Observer $observer) {
+        $_item = $observer->getEvent()->getItem()->getProduct();
+        Mage::getSingleton('unbxd_recommendation/sync')->addProduct($_item);
+        return $this;
+    }
+
+    public function saleOrderCancel(Varien_Event_Observer $observer) {
+
     }
 }
 ?>
