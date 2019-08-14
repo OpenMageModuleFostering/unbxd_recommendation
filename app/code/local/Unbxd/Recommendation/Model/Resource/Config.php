@@ -39,7 +39,7 @@ class Unbxd_Recommendation_Model_Resource_Config extends Mage_Core_Model_Mysql4_
         if(is_array($key)) {
             $keyValuePair = array();
             foreach ($key as $eachKey) {
-                $keyValuePair[$key] = $this->getValue($website_id, $eachKey);
+                $keyValuePair[$eachKey] = $this->getValue($website_id, $eachKey);
             }
             return $keyValuePair;
         }
@@ -50,7 +50,7 @@ class Unbxd_Recommendation_Model_Resource_Config extends Mage_Core_Model_Mysql4_
             ->where('`'.Unbxd_Recommendation_Model_Config::KEY.'` = ?', $key);
 
         $result = $adapter->fetchOne($select);
-        if($result == false) {
+        if($result === false) {
             return null;
         }
         return $result;
@@ -89,7 +89,7 @@ class Unbxd_Recommendation_Model_Resource_Config extends Mage_Core_Model_Mysql4_
     public function lockSite($website_id) {
         $this->setValue($website_id, array(
             Unbxd_Recommendation_Model_Config::FEED_LOCK => Unbxd_Recommendation_Model_Config::FEED_LOCK_TRUE,
-            Unbxd_Recommendation_Model_Config::FEED_LOCK_TIME => date(self::DATE_FORMAT)));
+            Unbxd_Recommendation_Model_Config::FEED_LOCK_TIME => date(self::DATE_FORMAT)), array());
 
     }
 
@@ -107,7 +107,7 @@ class Unbxd_Recommendation_Model_Resource_Config extends Mage_Core_Model_Mysql4_
         $feedLock = array_key_exists(Unbxd_Recommendation_Model_Config::FEED_LOCK, $feedLockDetails)?
             $feedLockDetails[Unbxd_Recommendation_Model_Config::FEED_LOCK]:null;
 
-        if(is_null($feedLock) || $feedLock == Unbxd_Recommendation_Model_Config::FEED_LOCK_FALSE){
+            if(is_null($feedLock) || $feedLock == Unbxd_Recommendation_Model_Config::FEED_LOCK_FALSE){
             return false;
         }
 

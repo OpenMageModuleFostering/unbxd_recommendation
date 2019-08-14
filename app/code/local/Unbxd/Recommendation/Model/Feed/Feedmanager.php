@@ -159,7 +159,7 @@ class Unbxd_Recommendation_Model_Feed_Feedmanager {
             }
 
 		 	$this->log('site ' . $website->getName() .' has been unlocked');
-            if($status) {
+                if($status) {
                 Mage::getModel('unbxd_recommendation/sync')
                     ->markItSynced($website->getWebsiteId(), $fromDate, $currentDate);
                 return array('success' => true, 'message' => 'File uploaded successfully');

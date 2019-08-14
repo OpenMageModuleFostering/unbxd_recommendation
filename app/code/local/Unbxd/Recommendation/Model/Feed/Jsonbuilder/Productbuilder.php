@@ -81,6 +81,7 @@ class Unbxd_Recommendation_Model_Feed_Jsonbuilder_Productbuilder extends
             $productArray[Unbxd_Recommendation_Model_Resource_Field::AVAILABILITY] =
                 $product->isSalable()? "true": "false";
             if(array_key_exists(Unbxd_Recommendation_Model_Resource_Field::FINAL_PRICE, $fields) &&
+                array_key_exists(Unbxd_Recommendation_Model_Resource_Field::PRICE, $productArray) &&
                 (!array_key_exists(Unbxd_Recommendation_Model_Resource_Field::FINAL_PRICE, $productArray) ||
                     is_null($productArray[Unbxd_Recommendation_Model_Resource_Field::FINAL_PRICE]))) {
                 $productArray[Unbxd_Recommendation_Model_Resource_Field::FINAL_PRICE] =
