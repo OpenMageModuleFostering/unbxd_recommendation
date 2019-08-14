@@ -26,6 +26,9 @@ class Unbxd_Recommendation_Helper_Feedhelper extends Unbxd_Recommendation_Helper
      * function to get Category from the category id,
      * This checks it present in the global array 'categoryMap', if it is not there fetches from db
      * So that once it gets one category, it doesn't make db call again for the same category
+     *
+     * @param string $category_id
+     * @return Mage_Catalog_Model_Category
      */
     public function getCategory($category_id = ""){
         if(!isset($this->categoryMap[$category_id])){
@@ -49,22 +52,20 @@ class Unbxd_Recommendation_Helper_Feedhelper extends Unbxd_Recommendation_Helper
         return $this->_rootCategoryIds[$website->getWebsiteId()];
     }
 
-    public function getCatLevel1(Mage_Core_Model_Website $website, $category_ids) {
+    public function getCategoryOnLevel($category_ids, $level) {
         if(!is_array($category_ids)) {
             return array();
         }
-        $rootCategories = $this->getRootCategoryIds($website);
         $catlevel1 = array();
         foreach($category_ids as $category_id) {
             $category = $this->getCategory($category_id);
             $parentIds = $category->getParentIds();
-            if(!is_null($category) &&
-                in_array($category->getId(), $rootCategories)) {
-                $catlevel1 = $catlevel1 + array($category->getId() => $category->getName());
+            if(!is_null($category) && $category->getLevel() == $level) {
+                $catlevel1 = $catlevel1 + array($category->getName());
             } else if ($category instanceof Mage_Catalog_Model_Category &&
                 is_array($parentIds) &&
                 (sizeof($parentIds) >0)) {
-                $catlevel1 = $catlevel1 + $this->getCatLevel1($website, $parentIds);
+                $catlevel1 = $catlevel1 + $this->getCategoryOnLevel($parentIds, $level);
             }
         }
         return $catlevel1;

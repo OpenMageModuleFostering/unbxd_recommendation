@@ -8,15 +8,27 @@
 class Unbxd_Recommendation_Model_Resource_Field extends Mage_Core_Model_Mysql4_Abstract
 {
 
-    const CAT_LEVEL_1_NAME = "catLevel1";
+    const CAT_LEVEL_1 = "categoryLevel1";
 
-    const CAT_LEVEL_2_NAME = "catLevel2";
+    const CAT_LEVEL_2 = "categoryLevel2";
 
-    const CAT_LEVEL_3_NAME = "catLevel3";
+    const CAT_LEVEL_3 = "categoryLevel3";
+
+    const CAT_LEVEL_4 = "categoryLevel4";
+
+    const CAT_LEVEL_1_NAME = "catLevel1Name";
+
+    const CAT_LEVEL_2_NAME = "catLevel2Name";
+
+    const CAT_LEVEL_3_NAME = "catLevel3Name";
+
+    const CAT_LEVEL_4_NAME = "catLevel4Name";
 
     const CATEGORY_IDS_NAME = "categoryIds";
 
     const CATEGORY_NAME = "category";
+
+    const AVAILABILITY = 'availability';
     /**
      * Unbxd Field Config table Name
      *
@@ -92,14 +104,23 @@ VALUES
 	({$websiteId}, 'size', 'text', 0, 'size', 1, 1),
 	({$websiteId}, 'image', 'link', 0, 'imageUrl', 1, 1),
 	({$websiteId}, 'url_path', 'link', 0, 'productUrl', 0, 1),
-	({$websiteId}, '".self::CAT_LEVEL_1_NAME. "', 'text', 0, NULL, 1, 0),
-	({$websiteId}, '".self::CAT_LEVEL_2_NAME. "', 'text', 0, NULL, 1, 0),
-	({$websiteId}, '".self::CAT_LEVEL_3_NAME. "', 'text', 0, NULL, 1, 0),
+	({$websiteId}, 'gender', 'text', 0, 'gender', 0, 1),
+	({$websiteId}, 'description', 'longText', 0, 'description', 0, 1),
+	({$websiteId}, 'catLevel1Name', 'text', 0, 'catLevel1Name', 0, 0),
+	({$websiteId}, 'catLevel2Name', 'text', 0, 'catLevel2Name', 0, 0),
+	({$websiteId}, 'catLevel3Name', 'text', 0, 'catLevel3Name', 0, 0),
+	({$websiteId}, 'catLevel4Name', 'text', 0, 'catLevel4Name', 0, 0),
+	({$websiteId}, 'categoryLevel1', 'text', 0, 'categoryLevel1', 1, 0),
+	({$websiteId}, 'categoryLevel2', 'text', 0, 'categoryLevel2', 1, 0),
+	({$websiteId}, 'categoryLevel3', 'text', 0, 'categoryLevel3', 1, 0),
+	({$websiteId}, 'categoryLevel4', 'text', 0, 'categoryLevel4', 1, 0),
+	({$websiteId}, 'created_at', 'date', 0, NULL, 0, 1)
+	({$websiteId}, 'availability', 'bool', 0, 'availability', 0, 0),
 	({$websiteId}, 'status', 'number', 0, NULL, 0, 0),
 	({$websiteId}, 'visibility', 'number', 0, NULL, 0, 0),
 	({$websiteId}, 'qty', 'number', 0, NULL, 0, 0),
-	({$websiteId}, '".self::CATEGORY_IDS_NAME. "', 'longText', 0, NULL, {$websiteId}, 0),
-	({$websiteId}, '".self::CATEGORY_NAME. "', 'text', 0, 'category', 1, 0),
+	({$websiteId}, 'categoryIds', 'longText', 0, NULL, 1, 0),
+	({$websiteId}, 'category', 'text', 0, 'category', 1, 0),
 	({$websiteId}, 'uniqueId', 'longText', 0, NULL, 0, 0),
 	({$websiteId}, 'entity_id', 'longText', 0, NULL, 0, 0);";
     }

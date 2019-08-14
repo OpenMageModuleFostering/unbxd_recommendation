@@ -104,11 +104,23 @@
         $featuredFields["discount"]=$this->getField("decimal", "false", "false");
         $featuredFields["rating"]=$this->getField("decimal", "false", "false");
         $featuredFields["brandId"]=$this->getField("text", "false", "false");
-        $featuredFields["catlevel1Name"]=$this->getField("text", "false", "false");
-        $featuredFields["catlevel2Name"]=$this->getField("text", "false", "false");
-        $featuredFields["catlevel3Name"]=$this->getField("text", "false", "false");
-        $featuredFields["catlevel4Name"]=$this->getField("text", "false", "false");
-        $featuredFields["category"]=$this->getField("text", "true", "true");
+        $featuredFields[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_1_NAME] =
+            $this->getField("text", "false", "false");
+        $featuredFields[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_2_NAME] =
+            $this->getField("text", "false", "false");
+        $featuredFields[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_3_NAME] =
+            $this->getField("text", "false", "false");
+        $featuredFields[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_4_NAME] =
+            $this->getField("text", "false", "false");
+        $featuredFields[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_1] =
+            $this->getField("text", "true", "false");
+        $featuredFields[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_2] =
+            $this->getField("text", "true", "false");
+        $featuredFields[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_3] =
+            $this->getField("text", "true", "false");
+        $featuredFields[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_4] =
+            $this->getField("text", "true", "false");
+        $featuredFields["category"] = $this->getField("text", "true", "true");
         $featuredFields["subCategory"]=$this->getField("text", "true", "true");
         $featuredFields["color"]=$this->getField("text", "true", "false");
         $featuredFields["size"]=$this->getField("text", "true", "false");

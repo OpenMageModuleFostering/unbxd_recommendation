@@ -95,7 +95,7 @@ class Unbxd_Recommendation_Model_Feed_Feedcreator {
 
  	private function writeProductsContent($fromdate,$todate,Mage_Core_Model_Website $website,$operation,$ids) {
  		
- 		$collection=$this->getCatalogCollection($fromdate,$todate,$website,$operation,$ids);
+ 		$collection = $this->getCatalogCollection($fromdate,$todate,$website,$operation,$ids);
 	    // get total size
  		//set the time limit to infinite
  		ignore_user_abort(true);
@@ -114,6 +114,7 @@ class Unbxd_Recommendation_Model_Feed_Feedcreator {
 			$collection->clear();
 			$collection->getSelect()->limit(self::PAGE_SIZE, ($pageNum++) * self::PAGE_SIZE);
 			$collection->load();
+            Mage::getModel('cataloginventory/stock_status')->addStockStatusToProducts($collection);
 			if(count($collection) == 0){
 				if($pageNum == 1){
 					$this->log("No products found");
@@ -232,11 +233,14 @@ class Unbxd_Recommendation_Model_Feed_Feedcreator {
  	*/
  	public function getCatalogCollection($fromdate,$todate,Mage_Core_Model_Website $website,$operation,$ids) {
         if ($operation == "add") {
-            $_catalogInventoryTable = Mage::getSingleton("core/resource")->getTableName("cataloginventory_stock_item");
+            $adapter = Mage::getSingleton("core/resource");
+            $_catalogInventoryTable = method_exists($adapter, 'getTableName')
+                ? $adapter->getTableName('cataloginventory_stock_item'): 'catalog_category_product_index';
             $collection = Mage::getResourceModel('unbxd_recommendation/product_collection')
                 ->addWebsiteFilter($website->getWebsiteId())
                 ->joinField("qty", $_catalogInventoryTable, 'qty', 'product_id=entity_id', null, 'left')
                 ->addAttributeToSelect('*')
+                ->addCategoryIds()
                 ->addPriceData(Mage_Customer_Model_Group::NOT_LOGGED_IN_ID, $website->getWebsiteId());
 
             Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($collection);

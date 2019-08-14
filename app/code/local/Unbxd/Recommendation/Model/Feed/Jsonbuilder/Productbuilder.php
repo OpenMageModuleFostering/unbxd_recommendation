@@ -50,7 +50,7 @@ class Unbxd_Recommendation_Model_Feed_Jsonbuilder_Productbuilder extends
  				$productArray[$uniqueIdField] = $columndata;
  			}else if($columnHeader=="url_path"){
  				// handling the url
- 				$productArray[$unbxdFieldName] = Mage::getUrl('').$columndata;
+ 				$productArray[$unbxdFieldName] = $product->getProductUrl();
             } else if (Mage::helper('unbxd_recommendation/feedhelper')->isImage($columnHeader)) {
                 // handling tthe images
                 $attributeValue = $this->getImage($columnHeader, $unbxdFieldName, $product, $fields);
@@ -78,6 +78,9 @@ class Unbxd_Recommendation_Model_Feed_Jsonbuilder_Productbuilder extends
 			// adding the category
 			$productArray = $category + $productArray;
 
+            $productArray[Unbxd_Recommendation_Model_Resource_Field::AVAILABILITY] =
+                $product->isSalable()? "true": "false";
+
 		}
 		return $productArray;
 	}
@@ -103,20 +106,14 @@ class Unbxd_Recommendation_Model_Feed_Jsonbuilder_Productbuilder extends
 			$category[] = $categoryName;
 		}
 
-        $level1Categories = Mage::helper('unbxd_recommendation/feedhelper')
-            ->getCatLevel1($website, $categoryIds);
-        $level2Categories = Mage::helper('unbxd_recommendation/feedhelper')
-            ->getCatLevel2($website, $categoryIds, $level1Categories);
-        $level3Categories = Mage::helper('unbxd_recommendation/feedhelper')
-            ->getCatLevel3($website, $categoryIds, $level2Categories);
-        if(array_values($level1Categories) > 0) {
-            $categoryData[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_1_NAME] = array_values($level1Categories);
-        }
-        if(array_values($level2Categories)) {
-            $categoryData[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_2_NAME] = array_values($level2Categories);
-        }
-        if(array_values($level3Categories)) {
-            $categoryData[Unbxd_Recommendation_Model_Resource_Field::CAT_LEVEL_3_NAME] = array_values($level3Categories);
+        for($level =1; $level <=4 ; $level++) {
+            $levelCategories = Mage::helper('unbxd_recommendation/feedhelper')
+                ->getCategoryOnLevel($categoryIds, $level);
+
+            if (sizeof($levelCategories) > 0) {
+                $categoryData['categoryLevel' . $level] = $levelCategories;
+                $categoryData['catLevel' . $level . 'Name'] = $levelCategories[0];
+            }
         }
 
 		$categoryData[Unbxd_Recommendation_Model_Resource_Field::CATEGORY_IDS_NAME] = $categoryIds;

@@ -446,14 +446,16 @@ $.get( baseUrl + 'credentails.html')
                 if(customAttributes.length < 1)
                   customAttributes = [{ field_name: '', datatype: '', canRemove:true }];
 
-
-                mappedAttributes.each(function(obj, i){
+                try{
+                  mappedAttributes.forEach(function(obj, i){
                    obj.tooltip =  unbxdDimensions.filter(
                     function( dimension ){
                        return dimension.value === obj.featured_field;
                    })[0].helpText;
-                });
+                  });
+                }catch(e){}
   
+                
                 ractiveCatalog.set({
                   mappedAttributes: mappedAttributes,
                   magentoFields: magentoFields,
@@ -776,6 +778,11 @@ Array.prototype.map = function(callback, thisArg) {
 
     return A;
   };
+
+
+
+
+
 
 
 
