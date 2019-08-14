@@ -1,7 +1,7 @@
 <config>
 	<modules>
 		<Unbxd_Recscore>
-			<version>1.0.25</version>
+			<version>1.0.26</version>
 		</Unbxd_Recscore>
 	</modules>
     <admin>
@@ -186,7 +186,7 @@
 		        <exclude_category>[]</exclude_category>
                 <tracker_url>https://tracker.unbxdapi.com/</tracker_url>
                 <platform_url>https://accounts.unbxdapi.com/admin/</platform_url>
-                <service_url>https://starwreck.unbxd.com/</service_url>
+                <service_url>https://starwreck.unbxdapi.com/</service_url>
                 <feed_url>https://feed.unbxdapi.com/</feed_url>
             </general>
         </unbxd>

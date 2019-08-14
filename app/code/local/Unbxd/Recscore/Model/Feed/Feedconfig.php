@@ -7,6 +7,7 @@
  */
 class Unbxd_Recscore_Model_Feed_Feedconfig {
     var $page = 0;
+    var $pageSize = 500;
     var $limit = -1;
     var $_includeSchema = true;
     var $_includeProduct = true;

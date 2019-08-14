@@ -5,11 +5,8 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
     var $fileName;
     var $fields;
     var $taxonomyFlag;
-    var $pageSize = 500;
     var $_fullupload;
     var $_copyFields = array();
-    var $page = 0;
-    var $limit = -1;
     protected $_feedConfig;
 
     public function __construct() {
@@ -114,7 +111,7 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
     protected  function _writeCatalogContent(Mage_Core_Model_Website $website, $currentDate) {
         if(!$this->isFullUpload()) {
             $fromDate = Mage::getResourceSingleton('unbxd_searchcore/config')
-                ->getValue($website->getWebsiteId(), Unbxd_Searchcore_Model_Config::LAST_UPLOAD_TIME);
+                ->getValue($website->getWebsiteId(), Unbxd_Recscore_Model_Config::LAST_UPLOAD_TIME);
             if (is_null($fromDate)) {
                 $fromDate = "1970-01-01 00:00:00";
             }
@@ -254,7 +251,7 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
                                           $operation = Unbxd_Recscore_Model_Feed_Tags::ADD, $loadAll = false) {
         if(!$loadAll) {
             $collection->clear();
-            $collection->getSelect()->limit($this->pageSize, ($pageNum) * $this->pageSize);
+            $collection->getSelect()->limit($this->_feedConfig->pageSize, ($pageNum) * $this->_feedConfig->pageSize);
             $collection->load();
         }
         return $collection;
@@ -263,7 +260,7 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
     protected function _writeProducts(Mage_Core_Model_Website $website, $collection,
                                       $operation = Unbxd_Recscore_Model_Feed_Tags::ADD, $loadAllAtOnce = false)
     {
-        $pageNum = $this->page;
+        $pageNum = $this->_feedConfig->page;
         $this->log('started writing products');
         $firstLoop = true;
         $totalSize = 0;
@@ -305,11 +302,11 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
                 $this->log("Error while addings items");
                 return false;
             }
-            $this->log('Added ' . ($pageNum) * $this->pageSize . ' products');
+            $this->log('Added ' . ($pageNum) * $this->_feedConfig->pageSize . ' products');
             $firstLoop = false;
-            if ($this->limit != -1) {
-                $totalSize += $this->pageSize;
-                if ($totalSize >= $this->limit) {
+            if ($this->_feedConfig->limit != -1) {
+                $totalSize += $this->_feedConfig->pageSize;
+                if ($totalSize >= $this->_feedConfig->limit) {
                     break;
                 }
             }

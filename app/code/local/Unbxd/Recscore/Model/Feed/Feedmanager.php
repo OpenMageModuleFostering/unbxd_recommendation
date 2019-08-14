@@ -219,12 +219,13 @@ class Unbxd_Recscore_Model_Feed_Feedmanager {
         Mage::getSingleton('unbxd_recscore/feed_filemanager')->setNoFile(true);
 
         try {
+	    $config = new Unbxd_Recscore_Model_Feed_Feedconfig($website);
+	    $config->setPage($page)
+		->setLimit($limit);
             // create the feed
             $status = Mage::getSingleton('unbxd_recscore/feed_feedcreator')
-                ->setConfig(new Unbxd_Searchcore_Model_Feed_Feedconfig($website))
+                ->setConfig($config)
                 ->setFullUpload(true)
-                ->setPage($page)
-                ->setLimit($limit)
                 ->createFeed($this->fileName, $website, $currentDate);
             $this->log('unbxd Datafeeder finished creating file');
         } catch (Exception $e) {
