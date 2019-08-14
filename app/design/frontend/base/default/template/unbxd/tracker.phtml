@@ -35,7 +35,13 @@ if(typeof UnbxdWidgetsConf == 'undefined' || UnbxdWidgetsConf == null) {
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ubx);
 })();
 
-function getBaseUrl() {
-    return "<?php echo Mage::getBaseUrl(); ?>";
-}
+(function(){
+    if(typeof Unbxd === 'undefined')
+        Unbxd = {};
+
+    Unbxd.getBaseUrl = function(){
+        return "<?php echo Mage::getBaseUrl(); ?>";
+    }
+})();
+
 </script>

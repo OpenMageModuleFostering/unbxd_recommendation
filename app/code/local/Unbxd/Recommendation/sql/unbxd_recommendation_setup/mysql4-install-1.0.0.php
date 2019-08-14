@@ -12,7 +12,7 @@ $fieldTable = $installer->getTable('unbxd_field_conf');
 $installer->run("
 DROP TABLE IF EXISTS `{$fieldTable}`;
 
-CREATE TABLE `unbxd_field_conf` (
+CREATE TABLE `{$fieldTable}` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `website_id` tinyint(5) unsigned NOT NULL,
   `field_name` varchar(100) NOT NULL DEFAULT '',

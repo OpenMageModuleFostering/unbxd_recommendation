@@ -101,7 +101,11 @@ var widgetRendrer = function ($) {
             path = appendCurrency(path);
             path = appendUid(path);
             path = path + "&screenWidth=" + getWidth();
-            urlpath = getBaseUrl() + 'unbxd/widget' + path;
+            baseurl = document.location.origin;
+            if(typeof Unbxd !== "undefined" && Unbxd.hasOwnProperty('getBaseUrl')) {
+                baseurl = Unbxd.getBaseUrl();
+            }
+            urlpath = baseurl + 'unbxd/widget' + path;
             $.ajax({
                 async:true,
                 url: urlpath,
@@ -169,8 +173,5 @@ function unbxdOnLoad() {
     }
     loadScript('jQuery', jQueryBaseUrl, widgetRendrer)
 }
-if (window.addEventListener) {
-    window.addEventListener('load', unbxdOnLoad, false);
-} else {
-    window.attachEvent('onload', unbxdOnLoad);
-}
+
+unbxdOnLoad();
