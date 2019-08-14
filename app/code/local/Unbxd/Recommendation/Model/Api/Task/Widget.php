@@ -151,7 +151,7 @@ class Unbxd_Recommendation_Model_Api_Task_Widget extends Unbxd_Recommendation_Mo
 
         $strippedJs = $this->getJavascriptNode($body);
         $body = str_replace($strippedJs, "", $body);
-        @$dom->loadHTML($prefix.$body. $postfix, LIBXML_HTML_NODEFDTD | LIBXML_HTML_NOIMPLIED);
+        @$dom->loadHTML($prefix.$body. $postfix);
 
         $xpath = new DOMXPath($dom);
         $classname = 'unbxd-field-image_link';

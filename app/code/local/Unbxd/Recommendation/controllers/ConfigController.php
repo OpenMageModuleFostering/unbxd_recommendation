@@ -55,7 +55,7 @@ class Unbxd_Recommendation_ConfigController extends Mage_Core_Controller_Front_A
     protected function prepare() {
         $this->getResponse()->clearHeaders()->setHeader('Content-type', 'application/json', true);
         if(array_key_exists("site", $_REQUEST)) {
-            $website = $this->getWebsiteByName($_GET["site"]);
+            $website = $this->getWebsiteByName($_REQUEST["site"]);
         }
 
         if(!isset($website) || !$website->hasData("website_id")) {
@@ -302,7 +302,7 @@ class Unbxd_Recommendation_ConfigController extends Mage_Core_Controller_Front_A
         if (is_null($website)) {
             return;
         }
-        Mage::getResourceModel('unbxd_recommendation/config')->unLockSite($website);
+        Mage::getResourceModel('unbxd_recommendation/config')->unLockSite($website->getWebsiteId());
         $this->getResponse()->setBody(json_encode(array('success' => true)));
     }
 

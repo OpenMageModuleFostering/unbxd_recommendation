@@ -3,7 +3,7 @@
     <div  class="row mar-0 border-left-color pad-btm-10p">
         <div class="col-md-60 col-sm-60 pad-0">
             <div class="row mar-0">
-                <div class="col-md-60 col-sm-60 col-xs-60 pad-0 magento-inner-block brd-btm-none">
+                <div class="col-md-60 col-sm-60 col-xs-60 pad-0 magento-inner-block brd-btm-none" style="padding-top: 40px;padding-bottom: 40px;">
                     <div class="row mar-0">
                         <div class="col-md-60 magento-head pad-0 mar-btm-20">
                             Authenticate the Unbxd Module
@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="row mar-0">
-                        <div class="col-md-60 magento-text text1 pad-0 mar-btm-70">
+                        <div class="col-md-60 magento-text text1 pad-0">
                             Create an account here <a href="//dashboard.unbxd.com/recommendations/#/register" target="_blank" style="color:#45b5c1;"> UNBXD Recommender </a>
                         </div>
                     </div>
@@ -63,25 +63,55 @@
 
                 </div>
             </div>
-            <div class="row mar-0">
-   
-                <div on-click="authenticate" class="col-md-20 
-                button-black-magento 
-                {{#if btnDisabled}}disabled-btn{{/if}} 
-                {{#if step1}}disabled-btn{{/if}} 
-                width-190 clickable-btn unbxd-mar-left-30 unbxd-mar-btm-20" style="margin:0px auto;float:none;">
+          
 
-                    <div style="color: #fff !important;">
-                        AUTHENTICATE
+            {{#if step1}}
+                <div class="row mar-0">
+                    <div class="col-md-60 magento-success-block mar-btm-20">
+                        <div class="row">
+                            <div class="col-md-10 magento-analytics-tick-green">
+
+                            </div>
+                            <div class="col-md-43 pad-rgt-0">
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-success-block-head weight300">
+                                        Authentication is completed
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-success-block-text weight300">
+                                        The extension is successfully authenticated
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-13">
+                                    <div on-click="reauthenticate" class="button-reauth-magento mar-top-5 width-170 pull-right clickable-btn">
+                                        REAUTHENTICATE
+                                    </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            <div class="unbxd-error-msg unbxd-center-div " style="margin-left: 14% !important;">
+            {{else}}
+                <div class="row mar-0">
+                    <div on-click="authenticate" class="col-md-20 
+                                button-black-magento 
+                                {{#if btnDisabled}}disabled-btn{{/if}} 
+                                {{#if step1}}disabled-btn{{/if}} 
+                                width-190 clickable-btn unbxd-mar-left-30 unbxd-mar-btm-20" style="margin:0px auto;float:none;">
+
+                        <div style="color: #fff !important;">
+                            AUTHENTICATE
+                        </div>
+                    </div>
+                    <div class="unbxd-error-msg unbxd-center-div " style="margin-left: 14% !important;">
                         {{errorMsg}}
-                </div>
-                <div class="unbxd-success-msg unbxd-center-div" style="margin-left: 14% !important;">
+                    </div>
+                    <div class="unbxd-success-msg unbxd-center-div" style="margin-left: 14% !important;">
                         {{successMsg}}
+                    </div>
                 </div>
-            </div>
+            {{/if}}
         </div>
     </div>
 

@@ -261,12 +261,18 @@ $.get( baseUrl + 'credentails.html')
                           }
                         })
                     
+                    },
+
+                    reauthenticate:function(){
+                      this.set({
+                        step1:false,
+                        site_key:"",
+                        secret_key:""
+                      })
                     }
                 })
 
-                
-
-                setStyles();
+              
                 $(".magento-tooltip").popover({ trigger:'hover' });
       };
 
@@ -296,7 +302,6 @@ $.get( baseUrl + 'credentails.html')
                   
                         newTodo: function ( event ) {
                           this.addItem();
-                          setStyles();
                         }
 
                       });
@@ -323,6 +328,7 @@ $.get( baseUrl + 'credentails.html')
                       customAttrErrorMsg: null,
                       dataErrorMsg:null,
                       dataSuccessMsg:null,
+                      dataWaitMsg:null,
                       disableButton:false
                     },
 
@@ -460,7 +466,6 @@ $.get( baseUrl + 'credentails.html')
                 $('select[name="unbxd-customattr"]').chosen('chosen:updated');
                 $('select[name="unbxd-select"]').prop('disabled', true).trigger("chosen:updated");
                 updateAllSelect();
-                setStyles();
                 ractiveCatalog.update();
              })
          }
@@ -492,7 +497,6 @@ $.get( baseUrl + 'credentails.html')
                   this.get('customAttributes').splice(event.index.i, 1);
                 }
                   
-                setStyles();
             },
 
            saveMapping:function(event){
@@ -567,7 +571,6 @@ $.get( baseUrl + 'credentails.html')
                    customAttrSucessMsg : null,
                    customAttrErrorMsg : null
                 });
-              setStyles();
            },
 
            enableEdit:function(){
@@ -598,7 +601,8 @@ $.get( baseUrl + 'credentails.html')
 
            uploadData:function(){
                this.set({
-                dataSuccessMsg:"Uploading data",
+                dataWaitMsg : "Uploading data",
+                dataSuccessMsg:"",
                 dataErrorMsg:"",
                 disableButton:true
                });
@@ -632,7 +636,8 @@ $.get( baseUrl + 'credentails.html')
                   },
                   complete:function(){
                     self.set({
-                      disableButton:false
+                      disableButton:false,
+                      dataWaitMsg:""
                    });
                   }
 
@@ -641,8 +646,6 @@ $.get( baseUrl + 'credentails.html')
            }
 
          });
-
-         setStyles();
          
     };
 
@@ -681,9 +684,15 @@ $.get( baseUrl + 'credentails.html')
                 clearInterval( _unbxdObject.pollingId );
             });
         }, 3000);
-    
 
-        setStyles();
+        ractiveAnalytics.on({
+            showWidgets:function( event ){
+                  activateLink( "four" );
+                  loadWidgetsTab();
+                  clearInterval( _unbxdObject.pollingId );
+                }
+        });
+    
 
     };
 
@@ -701,9 +710,7 @@ $.get( baseUrl + 'credentails.html')
           }
        });
 
-       setStyles();
        $(".magento-tooltip").popover({ trigger:'hover' });
-
     };
 
     var configureSelect = function(){
@@ -714,12 +721,6 @@ $.get( baseUrl + 'credentails.html')
     var updateAllSelect = function(){
        $('select').trigger('chosen:updated');
     };
-
-    var setStyles = function(){
-      $('.middle-nav-magento').css("height", $('#innerContainr').css("height"));
-      //$('select[name="unbxd-select"]').chosen({})
-    };
-
 
     var saveFields = function( data ){
         return $.ajax({

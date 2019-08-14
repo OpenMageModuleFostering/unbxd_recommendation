@@ -11,7 +11,7 @@
 
     <div  class="{{^_unbxdObject.step1}} unbxd-disabler {{/_unbxdObject.step1}}">
     <div class="row mar-0">
-        <div  class="col-md-60 magento-head pad-0 mar-btm-30">
+        <div  class="col-md-60 magento-head pad-0 mar-btm-20">
             Map Catalog Attributes
         </div>
     </div>
@@ -33,10 +33,10 @@
                     <div class="table table-magento table-magento1 unbxd-table width-62">
                         <div class="unbxd-thead">
                             <div class="unbxd-tr">
-                                <div  class="magento-tooltip unbxd-th pull-left width-45" data-title="UNBXD Attribute" data-content=" Unbxd attributes are fields which are identified by the Unbxd Recommendation Engine and are required for the recommendation algorithms and reporting" >
+                                <div  class="magento-tooltip unbxd-th pull-left width-45 weight300 " data-title="UNBXD Attribute" data-content=" Unbxd attributes are fields which are identified by the Unbxd Recommendation Engine and are required for the recommendation algorithms and reporting" >
                                     UNBXD Attribute
                                 </div>
-                                <div class="magento-tooltip unbxd-th pull-right width-55 border-right-rad" 
+                                <div class="magento-tooltip unbxd-th pull-right width-55 border-right-rad weight300 no-border-right" 
                                 data-title="{{_unbxdObject.siteName}} Catalog Fields" data-content="These are fields from {{_unbxdObject.siteName}}'s catalog which need to be mapped to the relevant Unbxd attribute. Skip the mapping for an Unbxd attribute if it cannot be mapped to a particular field in the {{_unbxdObject.siteName}} catalog" >
                                     Magento Attribute
                                 </div>
@@ -94,7 +94,7 @@
                     </div>
 
                      <div class="pull-right pad-left-10">
-                                <div on-click="disableEdit" class="button-edit-magento button-save-magento width-140 clickable-btn">
+                                <div on-click="disableEdit" class="button-edit-magento button-cancel-magento width-140 clickable-btn" style="padding-left: 54px;">
                                     Cancel
                                 </div>
                     </div>
@@ -115,7 +115,7 @@
 
             <div class="row mar-0">
                 <div class="col-md-60 magento-head pad-0 mar-btm-30 float-left">
-                    <div class="pull-left">Add Custom attributes</div>
+                    <div class="pull-left" >Add Custom attributes</div>
                 </div>
             </div>
             <div class="row mar-0">
@@ -125,8 +125,8 @@
                 </div>
             </div>
             <div class="row mar-0 pad-btm-20 add-attr">
-                 <div on-click="showCustomAttribute" class="col-md-20 button-black-magento1 width-250 btn-add-attribute"  >
-                    <div class="clickable-btn" style="color: #fff !important;">
+                 <div on-click="showCustomAttribute" class="col-md-20 button-black-magento1 width-220 btn-add-attribute"  >
+                    <div class="clickable-btn weight300" style="color: #fff !important;padding-right:16px;">
                         ADD ATTRIBUTE
                     </div>
                 </div>
@@ -162,7 +162,7 @@
 
                     <div class="width-64 pull-left">
                         <div class="pull-right pad-left-10">
-                            <div on-click="saveCustomAttribute" class="button-edit-magento button-save-magento width-140 clickable-btn {{disableSaveCustomAttr}}" >
+                            <div on-click="saveCustomAttribute" class="button-edit-magento button-save-magento width-140 clickable-btn {{disableSaveCustomAttr}}" style="padding-left: 62px;" >
                                 Save
                             </div>
                         </div>
@@ -257,7 +257,7 @@
      </div>
     
     <div class="row mar-0 pad-top-10">
-        <div  class="col-md-60 magento-head pad-0">
+        <div  class="col-md-60 magento-head pad-0 weight300">
             Sync the catalog data
         </div>
     </div>
@@ -267,9 +267,9 @@
         </div>
     </div>
     <div class="row mar-0 pad-top-30">
-        <div on-click="uploadData" class="col-md-20 button-black-magento1 width-250 {{#if disableButton}}disabled-btn{{/if}} "  >
-            <div class="clickable-btn" style="color: #fff !important;">
-                UPLOAD CATALOG DATA
+        <div on-click="uploadData" class="col-md-20 button-black-magento1 width-220 {{#if disableButton}}disabled-btn{{/if}} "  >
+            <div class="clickable-btn weight300" style="color: #fff !important;padding-right: 16px">
+                SYNC  CATALOG
             </div>
         </div>
     </div>
@@ -290,8 +290,39 @@
         <div class="unbxd-error-msg">
             {{dataErrorMsg}}
         </div>
-        <div class="unbxd-success-msg">
-            {{dataSuccessMsg}}
+         <div class="unbxd-success-msg">
+            {{dataWaitMsg}}
         </div>
+        {{#if dataSuccessMsg}}
+            <div class="row mar-0">
+                <div class="col-md-60 magento-success-block">
+                    <div class="row">
+                        <div class="col-md-10 magento-analytics-tick-green mar-top-15">
+
+                        </div>
+                        <div class="col-md-55">
+                            <div class="row">
+                                <div class="col-md-60 col-sm-60 col-xs-60 magento-success-block-head">
+                                    Congratulations,
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-60 col-sm-60 col-xs-60 magento-success-block-text">
+                                    Your site's catalog has been successfully synced with the Unbxd Recommendation Engine. Proceed to test for successful analytics integration and widget integration
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mar-0 pad-top-10">
+                <div class="col-md-60 magento-text pad-0 mar-btm-30 font17">
+                    <span class="note-head">Note:</span> Your site's catalog data needs to be regularly synced with the Unbxd Recommendation Engine for relevant recommendations to be displayed. Set-up a cronjob which performs the regular sync.
+                    For more datils 
+                    <a target="_blank" href="http://www.magentocommerce.com/wiki/1_-_installation_and_configuration/how_to_setup_a_cron_job" class="blue-link-help">click here</a>
+                </div>
+            </div>
+        {{/if}}
     </div>
 </div>

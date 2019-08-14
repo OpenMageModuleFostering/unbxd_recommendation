@@ -3,9 +3,11 @@
 }
 .middle-nav-magento-dropdown, .background-grey{
    background-color: #F3F6F6 !important;
+
 }
 .middle-nav-magento-dropdown{
-	top: 185px;
+	/*top: 185px;*/
+	width: 100%;
 }
 .top-200{
 	top:200px !important;
@@ -17,7 +19,7 @@
 	cursor: pointer;
 }
 .magento-active{
-	border-top: 1px solid #4e5253;
+	border-top: 0;
 	border-bottom: 1px solid #4e5253;
 	background: #45b5c1 url('../img/arrow-white.png') no-repeat 90%;
 }
@@ -327,9 +329,6 @@ text-transform: capitalize;
 .pad-top{
 	padding-top: 20px;
 }
-.middle-nav-magento, .inner-container-magento{
- top: 278px 
-}
 .border-left-color{
 	margin-left: 25px;
 	margin-right: 25px;
@@ -488,7 +487,7 @@ div.cudtom-attr-rows >  div:last-child div.add-row{
 	width: 36%
 }
 .btn-add-attribute, .btn-add-attribute:hover{
-	background: #3b3e40 url('../img/add-raw-hover.png') no-repeat 97%;
+	background: #3b3e40 url('../img/add.png') no-repeat 97%;
 }
 .magento-analytics-tick
 {
@@ -500,7 +499,7 @@ div.cudtom-attr-rows >  div:last-child div.add-row{
 	background-size: 92%;
 }
 .unbxd-top-strip{
-  border-top: 2px solid #45b5c1;
+  /*border-top: 2px solid #45b5c1;*/
 }
 .unbxd-green-border{
 	border: 1px solid  #47b28e;
@@ -630,3 +629,90 @@ div#unbxdHelpRows div div {
 .unbxd-mar-btm-20{
 	margin-bottom: 20px !important;
 }
+.note-head{
+	color: black;
+	font-weight: bold;
+}
+.font17{
+	font-size: 17px;
+}
+div.middle{
+	padding: 0;
+}
+.unbxd-container{
+	border-top: 6px solid #45b5c1;
+	background-color: #f3f6f6;
+	float: left;
+	overflow: hidden;
+	width: 100%;
+	 width:100%;
+    overflow:hidden;
+    font-family: proxima-nova, Arial, sans-serif !important;
+}
+.width-17{
+	width:17%;
+}
+.width-82{
+	width: 82%;
+}
+.unbxd-left {
+    float:left;
+    position:relative;
+}
+.unbxd-right {
+    float:right;
+    position: relative;
+    padding:3px;
+}
+.unbxd-left, .unbxd-right {
+    padding-bottom:8000px;
+    margin-bottom:-8000px;
+}
+.button-reauth-magento{
+	font-weight: bolder;
+}
+.magento-success-block, .magento-label{
+	font-weight: 300;
+}
+.chosen-drop, .no-radius{
+	border-radius: 0px !important;
+}
+.magento-text{
+	font-weight: 300;
+	color: #707777;
+}
+.button-cancel-magento
+{
+  background: #fff url('../img/cancel.png') no-repeat 10%;
+}
+.weight300{
+	font-weight: 300;
+}
+.width-220{
+	width: 220px;
+}
+.no-border-right{
+	border-right: 0px !important;
+}
+.no-left-top-rad{
+	border-top-left-radius: 0px;
+}
+div.popover div.arrow{
+	background: transparent !important;
+}
+.popover.right .arrow:after {
+	border-right-color: rgb(60, 63, 64) !important;
+}
+.popover-content{
+   color: #F3F6F6;
+   font-size: 14px;
+}
+ul.magento-conf-tabs  .magento-head-active {
+	 background-color: #E1E6E6;
+}
+a.magento-head-active  {
+	color: #4e5356 !important;
+	background: url('../img/level-arrow-active.png') no-repeat 92% !important;
+	background-color: #FFF !important;
+}
+
