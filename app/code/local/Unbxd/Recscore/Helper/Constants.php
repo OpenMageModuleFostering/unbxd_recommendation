@@ -167,6 +167,10 @@ class Unbxd_Recscore_Helper_Constants extends Mage_Core_Helper_Abstract {
 
     const INCLUDE_OUT_OF_STOCK_FROM_NON_CACHE = "include_out_of_stock_from_non_cache";
 
+    const INCLUDE_TAXONOMY_NODES = "include_taxonomy_nodes";
+
+    const INCLUDE_TAXONOMY_MAPPING = "include_taxonomy_mapping";
+
     const FEED_STATUS_UPLOADING = 'UPLOADING';
 
     const FEED_STATUS_UPLOADED_SUCCESSFULLY = 'UPLOADED SUCCESSFULL';

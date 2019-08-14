@@ -69,7 +69,7 @@ class Unbxd_Recscore_Model_Feed_Jsonbuilder_Productbuilder extends
 		if (!Mage::helper('unbxd_recscore')
 			->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_OUT_OF_STOCK)
 			&& !is_null($this->isSalableWithBasicAttr($product))) {
-			return $this->isSalableWithBasicAttr($product);
+			return !$this->isSalableWithBasicAttr($product);
 		}
 
 		$filters = $this->_getFeedHelper()->getFilters($website);

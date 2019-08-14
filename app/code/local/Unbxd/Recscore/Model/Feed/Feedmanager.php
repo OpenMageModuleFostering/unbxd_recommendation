@@ -161,6 +161,7 @@ class Unbxd_Recscore_Model_Feed_Feedmanager {
             try {
                 // create the feed
                 $status = Mage::getSingleton('unbxd_recscore/feed_feedcreator')
+                    ->setConfig(new Unbxd_Recscore_Model_Feed_Feedconfig($website))
                     ->setFullUpload($isFullUpload)
                     ->createFeed($this->fileName, $website, $currentDate);
                 $this->log('unbxd Datafeeder finished creating file');
@@ -220,6 +221,7 @@ class Unbxd_Recscore_Model_Feed_Feedmanager {
         try {
             // create the feed
             $status = Mage::getSingleton('unbxd_recscore/feed_feedcreator')
+                ->setConfig(new Unbxd_Searchcore_Model_Feed_Feedconfig($website))
                 ->setFullUpload(true)
                 ->setPage($page)
                 ->setLimit($limit)
@@ -243,6 +245,7 @@ class Unbxd_Recscore_Model_Feed_Feedmanager {
         $fromdate="1970-01-01 00:00:00";
         $currentData = date('Y-m-d H:i:s');
         return Mage::getSingleton('unbxd_recscore/feed_feedcreator')
+            ->setConfig(new Unbxd_Recscore_Model_Feed_Feedconfig($website))
             ->setFullUpload(true)
             ->getSize($website, $fromdate, $currentData);
 

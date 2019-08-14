@@ -10,29 +10,21 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
     var $_copyFields = array();
     var $page = 0;
     var $limit = -1;
-
+    protected $_feedConfig;
 
     public function __construct() {
         $this->_fullupload = true;
+    }
+
+    public function setConfig(Unbxd_Recscore_Model_Feed_Feedconfig $config) {
+        $this->_feedConfig = $config;
+        return $this;
     }
 
     public function init(Mage_Core_Model_Website $website, $fileName) {
         $this->_setFields($website);
         $this->_setCopyFields($website);
         $this->fileName = $fileName;
-    }
-
-    public function setPage($page = 0) {
-        $this->page = (int)$page;
-        return $this;
-    }
-
-    public function setLimit($limit = 500) {
-        $this->limit = (int)$limit;
-        if($limit < $this->pageSize) {
-            $this->pageSize = (int)$limit;
-        }
-        return $this;
     }
 
     /**
@@ -85,17 +77,26 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
      * @return bool
      */
     protected  function _writeFeedContent(Mage_Core_Model_Website $website, $currentDate) {
-        if(!$this->_appendTofile('{"feed":')) {
+        if(!$this->_appendTofile('{"feed":{')) {
             $this->log("Error writing feed tag");
             return false;
         }
 
-        if(!$this->_writeCatalogContent($website, $currentDate)) {
-            $this->log("Error writing catalog tag");
-            return false;
+        if($this->_feedConfig->isCatalogIncluded()) {
+            if(!$this->_writeCatalogContent($website, $currentDate)) {
+                $this->log("Error writing catalog tag");
+                return false;
+            }
         }
 
-        if(!$this->_appendTofile("}")) {
+        if($this->_feedConfig->isTaxonomyIncluded()) {
+            if (!$this->_writeTaxonomyContents($website)) {
+                return false;
+            }
+        }
+
+        if(!$this->_appendTofile("}}")) {
+
             $this->log("Error writing closing feed tag");
             return false;
         }
@@ -111,47 +112,46 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
      * @return bool
      */
     protected  function _writeCatalogContent(Mage_Core_Model_Website $website, $currentDate) {
-        if(!$this->_appendTofile('{"catalog":{')) {
-            $this->log("Error writing closing catalog tag");
-            return false;
-        }
-        if(!$this->_writeSchemaContent()) {
-            return false;
-        }
-
-        if(!$this->_appendTofile(",")) {
-            $this->log("Error while adding comma in catalog");
-            return false;
-        }
-
-        $fromDate = Mage::getResourceSingleton('unbxd_recscore/config')
-            ->getValue($website->getWebsiteId(), Unbxd_Recscore_Model_Config::LAST_UPLOAD_TIME);
-        if(is_null($fromDate)) {
+        if(!$this->isFullUpload()) {
+            $fromDate = Mage::getResourceSingleton('unbxd_searchcore/config')
+                ->getValue($website->getWebsiteId(), Unbxd_Searchcore_Model_Config::LAST_UPLOAD_TIME);
+            if (is_null($fromDate)) {
+                $fromDate = "1970-01-01 00:00:00";
+            }
+        } else {
             $fromDate = "1970-01-01 00:00:00";
         }
-        // If both of them are unsuccessful, then tag it as unsuccessful
-        if(!($this->_writeAddProductsContent($website, $fromDate, $currentDate)
-            || $this->_writeDeleteProductsContent($website, $fromDate, $currentDate))) {
+        if (!$this->_appendTofile('"catalog":{')) {
+            $this->log("Error writing closing catalog tag");
             return false;
         }
+        if($this->_feedConfig->isSchemaToBeIncluded()) {
+            if(!$this->_writeSchemaContent()) {
+                return false;
+            }
+        }
 
-        Mage::getModel('unbxd_recscore/sync')->markItSynced($website->getWebsiteId(), $currentDate);
+        if($this->_feedConfig->isSchemaToBeIncluded() && $this->_feedConfig->isProductToBeIncluded()) {
+            if (!$this->_appendTofile(",")) {
+                $this->log("Error while adding comma in catalog");
+                return false;
+            }
+        }
 
+        if($this->_feedConfig->isProductToBeIncluded()) {
+            // If both of them are unsuccessful, then tag it as unsuccessful
+            if (!($this->_writeAddProductsContent($website, $fromDate, $currentDate)
+                || $this->_writeDeleteProductsContent($website, $fromDate, $currentDate))
+            ) {
+                return false;
+            }
+            Mage::getModel('unbxd_searchcore/sync')->markItSynced($website->getWebsiteId(), $currentDate);
+        }
 
         if(!$this->_appendTofile("}")) {
             $this->log("Error writing closing catalog tag");
             return false;
         }
-        /*
- 		if(!$this->_writeTaxonomyContents($site)) {
- 			return false;
- 		}*/
-
-        if(!$this->_appendTofile("}")) {
-            $this->log("Error writing closing feed tag");
-            return false;
-        }
-
         return true;
     }
 
@@ -324,49 +324,78 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
         return true;
     }
 
-    protected  function _writeTaxonomyContents($site){
-
-        $collection=$this->getTaxonomyMappingCollection();
-        // get total size
-        //set the time limit to infinite
-        ignore_user_abort(true);
-        set_time_limit(0);
-        $pageNum = 0;
-        $this->log('started writing taxonomy tree');
-
-        if(!$this->_appendTofile(',"'. 'taxonomy' . '":{ "tree":[')) {
+    protected function _writeTaxonomyNodeContents(Mage_Core_Model_Website $website) {
+        if (!$this->_appendTofile('"tree":[')) {
             $this->log("Error while adding tree tag");
             return false;
         }
-
-        $content=Mage::getSingleton('unbxd_recscore/feed_jsonbuilder_taxonomybuilder')
-            ->createTaxonomyFeed($site);
-        $status=$this->_appendTofile($content);
-
-        if(!$status){
+        $content = Mage::getSingleton('unbxd_recscore/feed_jsonbuilder_taxonomybuilder')
+            ->createTaxonomyFeed($website->getName());
+        $status = $this->_appendTofile($content);
+        if (!$status) {
             $this->log("Error while addings taxonomy");
             return false;
         }
-
-        if(!$this->_appendTofile("]")) {
+        if (!$this->_appendTofile("]")) {
             $this->log("Error writing closing tree tag");
             return false;
         }
+        return true;
+    }
 
-        if(!$this->_appendTofile(',"mapping":[')) {
+    protected function _writeTaxonomyMappingContents(Mage_Core_Model_Website $website) {
+        if (!$this->_appendTofile('"mapping":[')) {
             $this->log("Error writing opening mapping tag");
             return false;
         }
-
-        $content=Mage::getSingleton('unbxd_recscore/feed_jsonbuilder_taxonomybuilder')->createMappingFeed($collection);
-        $status=$this->_appendTofile($content);
-
-        if(!$status){
+        $collection=$this->getTaxonomyMappingCollection();
+        if(is_null($this->_feedConfig->getTaxonomyPage()) || $this->_feedConfig->getTaxonomyPage() < 0) {
+            $collection->load();
+        } else {
+            $collection->load($this->_feedConfig->getTaxonomyPage(), $this->_feedConfig->getTaxonomyLimit());
+        }
+        $content = Mage::getSingleton('unbxd_recscore/feed_jsonbuilder_taxonomybuilder')->createMappingFeed($collection);
+        $status = $this->_appendTofile($content);
+        if (!$status) {
             $this->log("Error while addings taxonomy");
             return false;
         }
+        if (!$this->_appendTofile(']')) {
+            $this->log("Error writing closing mapping tag");
+            return false;
+        }
+        return true;
+    }
 
-        if(!$this->appendTofile(']}')) {
+    protected  function _writeTaxonomyContents(Mage_Core_Model_Website $website){
+
+        $this->log('started writing taxonomy tree');
+        if (!$this->_appendTofile($this->_feedConfig->isCatalogIncluded()?',':'')) {
+            $this->log("Error while adding tree tag");
+            return false;
+        }
+        if(!$this->_appendTofile('"'. 'taxonomy' . '":{')) {
+            $this->log("Error while adding tree tag");
+            return false;
+        }
+        if($this->_feedConfig->isTaxonomyNodeToBeIncluded()) {
+            if(!$this->_writeTaxonomyNodeContents($website)) {
+                return false;
+            }
+        }
+
+        if($this->_feedConfig->isTaxonomyNodeToBeIncluded() && $this->_feedConfig->isTaxonomyMappingToBeIncluded()) {
+            if (!$this->_appendTofile(',')) {
+                $this->log("Error while adding tree tag");
+                return false;
+            }
+        }
+        if($this->_feedConfig->isTaxonomyMappingToBeIncluded()) {
+            if(!$this->_writeTaxonomyMappingContents($website)) {
+                return false;
+            }
+        }
+        if(!$this->_appendTofile('}')) {
             $this->log("Error writing closing mapping tag");
             return false;
         }
@@ -442,16 +471,7 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
     }
 
     public function getTaxonomyMappingCollection() {
-        try{
-            $adapter = Mage::getSingleton('core/resource')->getConnection('core_read');
-            return $adapter->query("select catalog_category_product_index.product_id as entity_id,GROUP_CONCAT(catalog_category_product_index.category_id SEPARATOR ',') as category_id FROM catalog_category_product_index
-                join catalog_product_entity where catalog_category_product_index.product_id = catalog_product_entity.entity_id
-                group by catalog_category_product_index.product_id");
-        } catch(Exception $e) {
-            $this->log($e->getMessage());
-        }
-
-
+        return Mage::getResourceModel('unbxd_recscore/taxonomy_collection');
     }
 
 }
