@@ -36,6 +36,7 @@ class Unbxd_Recommendation_Helper_Feedhelper extends Unbxd_Recommendation_Helper
             $this->categoryMap[$category_id] = $category;
             $parentCategories = $category->getParentCategories();
             foreach($parentCategories as $parentCategory) {
+                $parentCategory = Mage::getModel('catalog/category')->load($parentCategory->getId());
                 $this->categoryMap[$parentCategory->getId()] = $parentCategory;
             }
             return $this->categoryMap[$category_id];

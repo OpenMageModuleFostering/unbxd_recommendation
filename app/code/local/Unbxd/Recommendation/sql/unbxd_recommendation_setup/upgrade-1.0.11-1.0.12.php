@@ -21,10 +21,10 @@ VALUES
 	({$websiteId}, 'catLevel2Name', 'text', 0, 'catLevel2Name', 0, 0),
 	({$websiteId}, 'catLevel3Name', 'text', 0, 'catLevel3Name', 0, 0),
 	({$websiteId}, 'catLevel4Name', 'text', 0, 'catLevel4Name', 0, 0),
-	({$websiteId}, 'categoryLevel1', 'text', 0, 'categoryLevel1', 1, 0),
-	({$websiteId}, 'categoryLevel2', 'text', 0, 'categoryLevel2', 1, 0),
-	({$websiteId}, 'categoryLevel3', 'text', 0, 'categoryLevel3', 1, 0),
-	({$websiteId}, 'categoryLevel4', 'text', 0, 'categoryLevel4', 1, 0),
+	({$websiteId}, 'categoryLevel1', 'text', 0, NULL, 1, 0),
+	({$websiteId}, 'categoryLevel2', 'text', 0, NULL, 1, 0),
+	({$websiteId}, 'categoryLevel3', 'text', 0, NULL, 1, 0),
+	({$websiteId}, 'categoryLevel4', 'text', 0, NULL, 1, 0),
 	({$websiteId}, 'availability', 'bool', 0, 'availability', 0, 0),
 	({$websiteId}, 'created_at', 'date', 0, NULL, 0, 1);";
     $installer->run($insertQuery);

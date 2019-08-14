@@ -29,6 +29,10 @@ class Unbxd_Recommendation_Model_Resource_Field extends Mage_Core_Model_Mysql4_A
     const CATEGORY_NAME = "category";
 
     const AVAILABILITY = 'availability';
+
+    const FINAL_PRICE = 'final_price';
+
+    const PRICE = 'price';
     /**
      * Unbxd Field Config table Name
      *

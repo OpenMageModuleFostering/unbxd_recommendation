@@ -77,9 +77,15 @@ class Unbxd_Recommendation_Model_Feed_Jsonbuilder_Productbuilder extends
 			$category = $this->getCategoryAttribute($website, $product);
 			// adding the category
 			$productArray = $category + $productArray;
-
+            //adding availability
             $productArray[Unbxd_Recommendation_Model_Resource_Field::AVAILABILITY] =
                 $product->isSalable()? "true": "false";
+            if(array_key_exists(Unbxd_Recommendation_Model_Resource_Field::FINAL_PRICE, $fields) &&
+                (!array_key_exists(Unbxd_Recommendation_Model_Resource_Field::FINAL_PRICE, $productArray) ||
+                    is_null($productArray[Unbxd_Recommendation_Model_Resource_Field::FINAL_PRICE]))) {
+                $productArray[Unbxd_Recommendation_Model_Resource_Field::FINAL_PRICE] =
+                    $productArray[Unbxd_Recommendation_Model_Resource_Field::PRICE];
+            }
 
 		}
 		return $productArray;
@@ -113,6 +119,7 @@ class Unbxd_Recommendation_Model_Feed_Jsonbuilder_Productbuilder extends
             if (sizeof($levelCategories) > 0) {
                 $categoryData['categoryLevel' . $level] = $levelCategories;
                 $categoryData['catLevel' . $level . 'Name'] = $levelCategories[0];
+                $category = $category + $levelCategories;
             }
         }
 

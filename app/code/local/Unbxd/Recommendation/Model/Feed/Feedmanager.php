@@ -33,7 +33,6 @@ class Unbxd_Recommendation_Model_Feed_Feedmanager {
             $response = $this->exec($ch);
             $this->log(json_encode($response));
             $responseMessage = json_decode($response['body'], true);
-            $this->log($responseMessage);
             if($responseMessage["statusCode"] != 200) {
                 throw new Exception('Unexpected response from unbxd server');
             }
