@@ -1,0 +1,35 @@
+<div class="tr-row">
+        
+         <div class="td-left width-35 custom-attributes-td magento-border-left pull-left">   
+              <div  class="btn-group width-100" >
+                   <select disabled={{disabled}} decorator='chosen' value={{field_name}}  name="unbxd-customattr" id="">
+                      {{#magentoFields}}
+                      <option class={{disabled}} value="{{this.field_name}}">
+                        {{this.field_name}}
+                      </option> 
+                       {{/magentoFields}}
+                    </select>
+              </div>
+          </div>
+
+         <div class="td-right width-45 custom-attributes-td magento-border-right pull-left">
+              <div class="btn-group width-100">
+                  <select decorator='chosen' value="{{datatype}}" 
+                  on-change="changeOfUnbxdAttr" name="unbxd-customattr" id="">
+                    {{#dataTypes}}
+                    <option value="{{.}}">{{.}}</option> 
+                    {{/dataTypes}}
+                  </select>
+              </div>
+          </div>
+
+          <div class="pull-left width-20">
+               <div on-click="removeRow" class="remove-row clickable-btn pull-left">
+               </div>
+               {{#if field_name !== "" && datatype !== ""}}
+               <div on-click="newTodo" class="add-row clickable-btn pull-left">
+               </div>
+               {{/if}}
+          </div>
+
+</div>

@@ -3,7 +3,7 @@
     "type": "magento-module",
     "license": "OSL-v3.0",
     "homepage": "",
-    "description": "helps integrating the unbxd recommender widgets",
+    "description": "recommendation module",
     "authors": [
     {
         "name": "ananthesh",

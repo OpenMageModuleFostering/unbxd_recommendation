@@ -1,0 +1,270 @@
+/* CSS for new rollling of Magento App */
+/* Author : Vinay */
+
+
+.magento-row-tabs {
+    background-color: #fff;
+    border: 1px solid #c6d1d3;
+    border-radius: 4px;
+    float: left;
+    padding: 5px 0 5px 10px;
+    width: 100%;
+}
+.catalog-table tbody tr:nth-child(even){
+	background:#f2f5f5;
+}
+.table-magento.table-magento1 > tbody > tr > td {
+    border-right: 1px solid #dee2e4 !important;
+    color: #5c656a;
+    font-size: 16px;
+    font-weight: 400;
+    height: 50px !important;
+    padding: 10px 10px 10px 20px;
+    vertical-align: middle;
+}
+
+.info-td-magento {
+    background: url("../img/info-small.png") no-repeat scroll 0 0 / 100% 100% rgba(0, 0, 0, 0);
+    display: inline-block;
+    float: right;
+    height: 20px;
+    margin-right: 5px;
+    width: 20px;
+}
+
+.table-magento1{
+	margin-bottom: 0;
+}
+.width-100{
+	width:100% !important;
+}
+.pad-rgt-200{
+	padding-right:200px;
+}
+.dblock{
+	display:block;
+}
+.saved-msg{
+	 background: url("../img/saved.png") no-repeat scroll 10% center #fff;
+	 border:none;
+	 color:#0da670 !important;
+}
+.magento-row-tabs span{
+	color:#a6a6a6 ;
+}
+.wht-font{
+	color:#FFF;
+}
+.button-black-magento1 ,.button-black-magento1:hover{
+	background-image: none;
+	border-radius: 3px;
+    color: #fdfdfd !important;
+}
+.button-black-magento1 a:hover, .button-black-magento1 a:visited, .button-black-magento1 a:active{
+	color:#FFF !important;
+}
+.width-40{
+	width:40px;
+}
+.magento-plus-btn, .magento-plus-btn:hover{
+	background: url("../img/add-icon.png") no-repeat scroll 50% center #3b3e40;
+	border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+	border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+.btn-group{
+	width:100% !important;
+}
+
+.table-magento.table-magento1 > tbody > tr > td{
+	width:auto;
+}
+.dropdown-toggle-magento{
+	width:auto;
+}
+.attribute-td {
+    width: 250px !important;
+}
+.dropdown-menu-magento{
+	width:auto !important;
+}
+.dropdown-menu-magento > li > a{
+	width:auto!important;
+}
+
+.btn-group.open{
+	width:30% !important;
+}
+.btn-group.open .dropdown-toggle-magento{
+	width:160px !important;
+}
+.search_info_box > img{float:none !important;}
+.search_info_box a{color:#05b3aa;}
+.clear{clear:both;}
+.magento-search-type{
+	border:1px solid #c6d1d3; 
+	border-radius: 3px;
+	margin:10px 0px 10px;
+	cursor:pointer;
+}
+.magento-search-copy {
+    padding: 30px 20px;
+    min-height: 136px;
+    padding-top: 20px;
+    border-right:1px solid #c6d1d3; 
+    position: relative;
+    /*resize: vertical;*/
+    overflow: auto;
+}
+
+.magento-search-copy > div {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    padding: 20px;
+    transform: translateY(-50%);
+    /*resize: vertical;*/
+    overflow: auto;
+}
+
+.search-head {
+    color: #4e5356;
+    font-weight: 400;
+    font-size: 21px;
+    margin-bottom: 5px;
+}
+
+.search-desc {
+    color: #929494;
+    width: 85%;
+	float:left;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing:1px;
+}
+
+.search-desc a, .search-desc a:hover{
+	color: #05b3aa !important;
+}
+ 
+.magento-search-type:hover,
+.active-search{
+	border: 1px solid #05b3aa;
+	background:#f2f5f5;
+}
+.magento-search-type-arrow {
+    padding: 42px 0;
+	height: 136px;
+}
+.magento-search-type-arrow div{
+	background:url('../img/arrow_grey.png') no-repeat center;
+	height:45px;
+	width:21px;
+	margin:auto;
+}
+.magento-search-type:hover .magento-search-type-arrow,
+.active-arrow{
+	background:#05b3aa;
+}
+.magento-search-type:hover .magento-search-type-arrow div,
+.active-arrow div{
+	background:url('../img/arrow_white.png') no-repeat center;
+}
+.search-active-btn{
+    background: url("../img/active.png") no-repeat scroll 3px 4px rgba(0, 0, 0, 0);
+    border: 1px solid #05b3aa;
+    border-radius: 3px;
+    color: #05b3aa;
+    float: right;
+    height: 25px;
+    line-height: 23px;
+    width: 85px;
+    background-position: 10px;
+    padding-left: 30px;
+}
+
+.mail-popup-bg {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+	display:none;
+	z-index: 10;
+}
+.mail-popup {
+    background: none repeat scroll 0 0 #fff;
+    position: absolute;
+    width: 85%;
+	display:none;
+	z-index: 11;
+}
+.mail-popup-head {
+    background: none repeat scroll 0 0 #05b3aa;
+    color: #fff;
+    font-size: 1.25em;
+    padding: 15px 40px;
+}
+.mail-popup-content {
+    padding: 25px;
+}
+.mail-popup-content input, .mail-popup-content input:focus {
+    vertical-align: baseline;
+    border: 0px solid #FFF;
+}
+.mail-popup-content textarea{
+    color: #636769;
+    font-size: 13px;
+    overflow: visible;
+}
+.to-holder > span {
+    font-size: 1.25em;
+}
+.to-holder, .cc-holder {
+    border: 1px solid #c6d1d3;
+    color: #929494;
+    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.to-holder > input:focus, .cc-holder > input:focus{
+	border:none;
+}
+
+.to-holder > input {
+    border: medium none;
+    color: #929494;
+    margin-left: 5px;
+    padding-left: 5px;
+}
+.cc-holder , .cc-holder > input {color:#000;}
+
+.body-holder{
+	min-height:200px;
+}
+.mail-send-btn {
+    background: none repeat scroll 0 0 #05b3aa;
+    border: medium none;
+    color: #fff;
+    font-size: 1.25em;
+    padding: 10px 40px;
+}
+.pad-top-6p{
+    padding-top: 6%;
+}
+.pad-left-10p{
+    padding-left: 10%;
+}
+.mail-popup .mail-body{
+    border: 0px;
+    width: 100%;
+}
+.cc-div{
+    padding-top: 8px;
+    padding-bottom: 5px;
+    overflow: auto;
+}

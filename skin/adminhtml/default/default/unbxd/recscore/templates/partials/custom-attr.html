@@ -1,0 +1,143 @@
+<div class="col-md-60 col-sm-60 col-xs-60  magento-inner-block pad-top-20 pad-btm-20">
+    <div class="row mar-0">
+        <div class="col-md-60 border-0 pad-0 magento-head ">
+            Add Custom Attributes <span class="grey-text">[Optional]</span>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-md-60 col-sm-60 col-xs-60   pad-top-20 brd-btm-0 pad-btm-0">
+    <div class="col-md-60 magento-text ">
+        Certain fields like material, occasion, style may be present in {{_unbxdObject.siteName}}'s catalog and can be used to improve recommendations or be displayed in the search results. Since these are not default Unbxd attributes, please specify the data type for these fields.
+    </div>
+</div>
+
+<div class="col-md-60 col-sm-60 col-xs-60   pad-top-20 pad-btm-20 brd-top-btm-0 height-100px add-attr">
+    <div on-click="showCustomAttribute" class="col-md-20 button-black-magento1 width-220 btn-add-attribute">
+        <div class="clickable-btn weight300" style="color: #fff !important;padding-right:16px;">
+            ADD ATTRIBUTE
+        </div>
+    </div>
+</div>
+<div class="col-md-60 col-sm-60 col-xs-60   pad-top-20 pad-btm-20 brd-top-btm-0 custom-attributes">
+
+    <div>
+        <div class="width-88 pad-btm-10">
+            <div class="tr-row">
+                <div class="magento-tooltip unbxd-th pull-left width-35 pad-top-0 unbxd-table-head" data-content="Custom attributes are fields specific to your product catalog which aren’t included in recommendations or search results by default">
+                    Custom Attribute
+                </div>
+                <div class=" unbxd-th pull-left width-45 border-right-rad pad-top-0 unbxd-table-head">
+                    Data-Type
+                </div>
+            </div>
+            <div class="cudtom-attr-rows">
+                {{#each customAttributes:i}} {{>item}} {{/each}}
+            </div>
+        </div>
+
+
+        <div class="row mar-0 ">
+
+            <div class="width-70 pull-left">
+                <div class="pull-right pad-left-10  mar-left-5">
+                    <div on-click="saveCustomAttribute" class="unbxd-btn-outer width-140 clickable-btn {{disableSaveCustomAttr}}">
+                        <div class="button-edit-magento button-save-magento mar-0-auto width-70">
+                            Save
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="width-30 pull-left pad-top-5">
+                {{#if customAttrSucessMsg}}
+                <div class="_unbxd-success unbxd-success-msg">
+                    <div class="unbxd-saved"></div>
+                    {{customAttrSucessMsg}}
+                </div>
+                {{/if}}
+                <div class="_unbxd-err unbxd-err-msg">
+                    {{customAttrErrorMsg}}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mar-0">
+            <div class="col-md-60 magento-text  mar-btm-20 mar-top-20">
+                For a detailed explanation of data-types, click
+                <a target="_blank" href="http://docs.unbxd.com/recommendations/platforms/magento/integration.html" 
+                class="blue-link-help">here</a>
+            </div>
+            <div id="dataHelp" class="width-60" style="display:none">
+                <div class="tr-row">
+                    <div class="unbxd-th pull-left width-40 help-table-head unbxd-border">
+                        Data-type
+                    </div>
+                    <div class=" unbxd-th pull-left width-40 help-table-head unbxd-border border-right-rad" >
+                        Description
+                    </div>
+                </div>
+                <div id="unbxdHelpRows" class="cudtom-attr-rows">
+                    <div class="tr-row" style="height:35px">
+                        <div class="td-left width-50 custom-attributes-td magento-border-left pull-left">
+                            text
+                        </div>
+                        <div class="td-right width-50 custom-attributes-td magento-border-right pull-left">
+                            Any string value
+                        </div>
+                    </div>
+                    <div class="tr-row" style="height:35px">
+                        <div class="td-left width-50 custom-attributes-td magento-border-left pull-left">
+                            decimal
+                        </div>
+                        <div class="td-right width-50 custom-attributes-td magento-border-right pull-left">
+                            Any decimal
+                        </div>
+                    </div>
+                    <div class="tr-row" style="height:35px">
+                        <div class="td-left width-50 custom-attributes-td magento-border-left pull-left">
+                            number
+                        </div>
+                        <div class="td-right width-50 custom-attributes-td magento-border-right pull-left">
+                            Any integer
+                        </div>
+                    </div>
+                    <div class="tr-row" style="height:35px">
+                        <div class="td-left width-50 custom-attributes-td magento-border-left pull-left">
+                            longText
+                        </div>
+                        <div class="td-right width-50 custom-attributes-td magento-border-right pull-left">
+                            Any string value
+                        </div>
+                    </div>
+                    <div class="tr-row" style="height:35px">
+                        <div class="td-left width-50 custom-attributes-td magento-border-left pull-left">
+                            link
+                        </div>
+                        <div class="td-right width-50 custom-attributes-td magento-border-right pull-left">
+                            Any URL
+                        </div>
+                    </div>
+                    <div class="tr-row" style="height:35px">
+                        <div class="td-left width-50 custom-attributes-td magento-border-left pull-left">
+                            date
+                        </div>
+                        <div class="td-right width-50 custom-attributes-td magento-border-right pull-left">
+                            SO 8601 date (YYYY­MM­DDTHH:MM:SSZ)
+                        </div>
+                    </div>
+                    <div class="tr-row" style="height:35px">
+                        <div class="td-left width-50 custom-attributes-td magento-border-left pull-left">
+                            bool
+                        </div>
+                        <div class="td-right width-50 custom-attributes-td magento-border-right pull-left">
+                            Can be “true” OR “false”
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

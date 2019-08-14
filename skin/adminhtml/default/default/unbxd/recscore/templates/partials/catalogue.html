@@ -1,0 +1,125 @@
+
+    <div class="col-md-60 col-sm-60 col-xs-60  magento-inner-block pad-top-20 pad-btm-20 top-rad">
+        <div class="row mar-0">
+            <div class="col-md-60 border-0 pad-0 magento-head ">
+                Map Catalog Attributes
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-60 col-sm-60 col-xs-60   pad-top-20 brd-btm-0 pad-btm-0">
+        <div class="row mar-0">
+            <div class="col-md-60 magento-text  mar-btm-10">
+                Unbxd needs your catalog data in order to show accurate results.
+            </div>
+        </div>
+        <div class="row mar-0">
+            <div class="col-md-60 magento-text ">
+                Help the Unbxd Smartengage Engine make sense of this data by mapping your catalog attributes to the <br>
+                respective Unbxd attributes.
+            </div>
+        </div>
+    </div>
+   
+   <div class="col-md-60 col-sm-60 col-xs-60   pad-top-20 pad-btm-20 brd-btm-0">
+        <div class="col-md-60 col-sm-60 col-xs-60 ">
+            <div class="mar-btm-n10">
+                <div class="col-md-60 col-sm-60  ">
+                    <div class="table unbxd-cat-table table-magento table-magento1 unbxd-table width-70">
+                        <div class="unbxd-thead">
+                            <div class="unbxd-tr">
+                                <div  class="magento-tooltip unbxd-th pull-left width-45 weight300 unbxd-table-head"
+                                data-content={{config.tooltips.unbxdAttribute}} >
+                                    Unbxd Attribute
+                                </div>
+                                <div class="magento-tooltip unbxd-th pull-right width-55 border-right-rad weight300 no-border-right unbxd-table-head" data-content="These are fields from {{_unbxdObject.siteName}}'s catalog which need to be mapped to the relevant Unbxd attribute" >
+                                    Magento Attribute
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="unbxd-rows" >
+                            {{#mappedAttributes}}
+                            <div class="tr-row">
+                                <div data-content="{{tooltip}}" class=" td-left width-45 _tooltip bord-right" >
+                                    {{featured_field}}
+                                </div>
+                                
+                                {{#if enableEdit}}
+                                    <div class="td-right width-55">
+                                        <div class="btn-group width-100" >
+                                            <select disabled=disabled decorator='chosen' 
+                                            value={{field_name}}  name="unbxd-select" id="">
+                                              {{#magentoFields}}
+                                              <option class={{disabled}} 
+                                              disabled={{disabled}} 
+                                              value="{{this.field_name}}">
+                                                {{this.field_name}}
+                                              </option> 
+                                               {{/magentoFields}}
+                                            </select>
+                                        </div>
+                                    </div>
+                                {{else}}             
+                                    <div  class=" td-left width-55 _tooltip chosen-padding" >
+                                            {{field_name}}
+                                    </div>
+                                {{/if}}
+                            </div>   
+                            {{/mappedAttributes}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row mar-0  mar-btm-10">
+                <div class="width-70 pull-left">
+                {{^enableEdit}}
+                    <div class="pull-right pad-left-10">
+                        <div on-click="enableEdit" class="unbxd-btn-outer width-140 clickable-btn unhoverd-btn">
+                            <div class="button-edit-magento">
+                                 Edit Attribute
+                            </div>
+                        </div>
+                    </div>
+                {{/enableEdit}}
+
+                {{#if enableEdit}}
+                    <div class="pull-right {{saveMapping}} pad-left-10">
+                                <div on-click="saveMapping" class="width-140 unbxd-btn-outer clickable-btn">
+                                    <div class="button-edit-magento button-save-magento mar-0-auto width-70">
+                                       Save  
+                                    </div>
+                                </div>
+                    </div>
+
+                     <div class="pull-right pad-left-10">
+                            <div on-click="disableEdit" class=" width-140 clickable-btn unbxd-btn-outer">
+                                <div class="button-edit-magento button-cancel-magento mar-0-auto width-70">
+                                        Cancel
+                                </div> 
+                            </div>
+                    </div>
+                {{/if}}
+                </div>
+
+                <div class="width-30 pull-left pad-top-5">
+                      {{#if successMsg}}
+                        <div class="mar-left-15 unbxd-success-msg">
+                            <div class="unbxd-saved"></div>
+                            {{successMsg}}
+                        </div>
+                      {{/if}}
+                        <div class="unbxd-err-msg">
+                            {{errorMsg}}
+                        </div>
+                </div>
+                
+            </div>
+            
+
+           
+        </div>
+     </div>

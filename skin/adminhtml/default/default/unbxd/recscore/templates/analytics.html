@@ -1,0 +1,191 @@
+{{^_unbxdObject.step2}}
+    <div class="row mar-0">
+            <div class=" magento-block pad-btm-20 magento-redbar">
+                PLEASE MAP CATALOG AND UPLOAD DATA FIRST
+            </div>
+            <div class="unbxd-disabled-cover">
+            </div>
+    </div>
+    
+{{/_unbxdObject.step2}}
+
+<div class="row mar-0">
+
+    <div class="col-md-60 col-sm-60  magento-block pad-top-0">
+        <div class="row mar-0">
+            <div class="col-md-60 col-sm-60 col-xs-60 brd-btm-0 magento-inner-block pad-top-20 pad-btm-20 top-rad">
+                <div class="row mar-0">
+                    <div class="col-md-60 border-0 pad-0 magento-head ">
+                        Event Tracking Status
+                    </div>
+                </div>
+            </div>
+              
+            <div class="col-md-60 col-sm-60 col-xs-60  magento-inner-block pad-top-20 pad-btm-20 btm-rad">
+                <div class="row mar-0">
+
+                    <div class="col-md-60 magento-text  pad-btm-20 magento-text">
+                        Unbxd automatically adds event handling tags to important visitor events like search hits, product views, cart additions and orders.
+                        We track these events in order to show comprehensive reports and personalized recommendations & search results. 
+                    </div>
+
+                    <div class="row text-center pad-btm-10 font-15 grey-text"> 
+                            See below if the anaytics integration is successful 
+                            <span class="blue-link-help">Trubleshoot here</span>
+                    </div>
+
+                    <div class="row text-center">
+                        {{#if config.unbxdSearchenabled}}
+                         <div class="col-md-14 col-sm-13  magento-analytics-block 
+                            {{^searchHits}} magento-analytics-block1 {{/searchHits}}  pad-btm-20 float-none display-inline" >
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-head mar-btm-20">
+                                        SEARCH HITS
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-tick
+                                    {{^searchHits}} magento-analytics-cross{{/searchHits}} ">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-text mar-top-20 ">
+                                        {{#if searchHits}}
+                                            Captured
+                                        {{else}}
+                                            Waiting for
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-text">
+                                        search hits
+                                    </div>
+                                </div>
+                            </div>
+                            {{/if}}
+
+                            <div class="col-md-14 col-sm-13  magento-analytics-block 
+                            {{^productClick}} magento-analytics-block1 {{/productClick}}  pad-btm-20 unbxd-md-offset-2 float-none display-inline">
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-head mar-btm-20">
+                                        PRODUCT VIEWS
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-tick
+                                    {{^productClick}} magento-analytics-cross{{/productClick}}">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-text mar-top-20 ">
+                                        {{#if productClick}}
+                                            Captured
+                                        {{else}}
+                                            Waiting for
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-text">
+                                        products clicks
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-14 col-sm-13  magento-analytics-block 
+                            {{^addToCartClick}}magento-analytics-block1{{/addToCartClick}}  pad-btm-20 unbxd-md-offset-2 float-none display-inline">
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-head mar-btm-20">
+                                        CART ADDITIONS
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-tick {{^addToCartClick}}magento-analytics-cross{{/addToCartClick}}">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-text mar-top-20 ">
+                                        {{#if addToCartClick}}
+                                            Captured
+                                        {{else}}
+                                            Waiting for
+                                        {{/if}} 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-text">
+                                        cart additions
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-13 col-sm-13  magento-analytics-block 
+                            {{^productBuysClick }} magento-analytics-block1 {{/productBuysClick}}  pad-btm-20 unbxd-md-offset-2 float-none display-inline">
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-head mar-btm-20">
+                                        ORDERS
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-tick 
+                                    {{^productBuysClick}} magento-analytics-cross{{/productBuysClick}} ">
+                                        &nbsp;
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-text mar-top-20 ">
+                                        {{#if productBuysClick}}
+                                            Captured
+                                        {{else}}
+                                            Waiting for
+                                        {{/if}} 
+                                    </div>
+                                </div>
+                                 <div class="row">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-analytics-text">
+                                        orders
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="row background-grey mar-top-20 pad-5 pad-left-10">
+                            <div class="info-icon-big pull-left mar-right-10 "></div>
+                            <div class="pad-top-10 grey-text">Note: If the above events are mot being tracked, it could be because your Magento templates are heavily customized. Please contact support
+                            </div>
+                        </div>
+
+                    {{#if config.unbxdSearchenabled}}
+                        <div class="row background-grey mar-top-20 pad-btm-15 pad-left-10 pad-top-10 pad-right-10">
+                            <div class="search-head">
+                                Search results page tracking
+                            </div>
+                            <div class="grey-text mar-top-10 font-15">
+                                To track product clicks on search results pages, you'll need to add the following code on the search results page. For more information, please refer to our documentation
+                            </div>
+                            <div class="pad-left-10 background-white unbxd-code">         
+                                    &lt;Mage::helper('unbxd_searchcore/analyticshelper')->getProductClickAttributes($product, $rank);&gt;       
+                            </div>
+                        </div>
+
+                        <div class="row background-grey mar-top-20 pad-5 pad-left-10">
+                            <div class="info-icon-big pull-left mar-right-10 background-center">   
+                            </div>
+                            <div class="pad-top-10 grey-text">Note: We strongly suggest this step be implemented by a web developer. In case of any questions, please contact support
+                            </div>
+                        </div>
+                    {{/if}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

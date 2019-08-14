@@ -1,0 +1,68 @@
+<div class="row mar-0 magento-block pad-top-0">
+    <div class="row mar-0">
+        <div class="col-md-60 col-sm-60 col-xs-60  magento-inner-block brd-btm-0 magento-breadcrum">
+            <div class="row mar-0">
+                <div class="col-md-40 magento-bread-text ">
+                    <span class="breadcrum-prev clickable" on-click="goBack">Search</span>
+                    <span class="breadcrumb-arrow"></span>
+                    <span class="breadcrum-current">API Integration</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <div class="row mar-0">
+        <div class="col-md-60 col-sm-60 col-xs-60  magento-inner-block pad-top-20">
+            <div class="row mar-0">
+                <div class="col-md-60 border-0 pad-0 magento-head  mar-btm-10">
+                    API Integration
+                </div>
+            </div>
+
+            <div class="row mar-0">
+                <div class="col-md-60 magento-text2 magento-text">
+                    UNBXD search will replace the default magento catalog search. Following search functionalities will be supported
+                    <ul>
+                        <li>Relevant Search</li>
+                        <li>Pagination</li>
+                        <li>Sorting</li>
+                        <li>Spellcheck</li>
+                        <li>Facets</li>
+                        <li>Filters</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mar-0">
+        
+        <div class="col-md-60 col-sm-60 col-xs-60  magento-inner-block pad-top-20 brd-top-0 pad-top-0">
+            <div class="row mar-0">
+                <div class="col-md-50 border-0 magento-head  pull-left mar-btm-10">
+                    Activate or Deactivate API Integration
+                </div>
+                <div class="col-md-50 magento-text  mar-btm-30 unbxd-error-msg ">
+                    <div class="pull-right">{{errorMsg}}</div>  
+                </div>
+                <div class="col-md-7 pad-btm-20 mar-mtop-30 pull-right col-md-offset-3">
+                   <div on-click="toggleAPIIntegration">
+                                {{#if search_mod_status}}
+                                  {{>switchon}}
+                                {{else}}
+                                  {{>switchoff}}
+                                {{/if}}
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                <div class="search_info_box">
+                    <div class="info-icon-big pull-left mar-right-10 box-30"></div>
+                    <span>Note</span> : If you have implemented custom templates or installed third party modules some of the functionalities may not work. Please contact our support team at
+                    <a href="mailto:support@unbxd.com">support@unbxd.com</a> and we will help you out to fix it.
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

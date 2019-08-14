@@ -1,9 +1,9 @@
 <config>
     <modules>
-        <Unbxd_Core>
+        <Unbxd_Recscore>
             <active>true</active>
             <codePool>local</codePool>
-        </Unbxd_Core>
+        </Unbxd_Recscore>
         <Unbxd_Recommendation>
             <active>true</active>
             <codePool>local</codePool>

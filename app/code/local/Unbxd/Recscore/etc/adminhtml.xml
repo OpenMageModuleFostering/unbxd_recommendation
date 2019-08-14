@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <unbxd translate="title" module="unbxd_recscore">
+            <title>Unbxd</title>
+            <action>unbxdadmin/index</action>
+        </unbxd>
+    </menu>
+</config>

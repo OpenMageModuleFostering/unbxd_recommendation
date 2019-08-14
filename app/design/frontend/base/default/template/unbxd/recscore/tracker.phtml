@@ -1,0 +1,49 @@
+<?php if(Mage::helper("unbxd_recscore")->isExecutable()) { ?>
+<input type="hidden" id="jQueryBaseUrl" value="<?php echo Mage::getBaseUrl('js',
+    Mage::app()->getFrontController()->getRequest()->isSecure()) ?>unbxd/jquery.js"/>
+<script type="text/javascript">
+/* * * CONFIGURATION * * */
+var UnbxdSiteName = "<?php echo Mage::helper('unbxd_recscore')->getSiteName(); ?>";
+var UnbxdApiKey = "<?php echo Mage::helper('unbxd_recscore')->getApiKey(); ?>";
+
+<?php $category = Mage::registry("current_category");
+ if (isset($category)) { ?>
+category = "<?php echo $category->getName(); ?>";
+<?php } ?>
+
+if(typeof UnbxdWidgetsConf == 'undefined' || UnbxdWidgetsConf == null) {
+    var UnbxdWidgetsConf = {
+        currency: "<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>"
+        <?php if (isset($category)) { ?>
+            ,category:"<?php echo $category->getName(); ?>"
+        <?php } ?>
+    };
+}
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var ubx = document.createElement('script'); 
+  ubx.type = 'text/javascript'; ubx.async = true;
+  ubx.src = '//d21gpk1vhmjuf5.cloudfront.net/unbxdAnalytics.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ubx);
+})();
+
+(function() {
+    var ubx = document.createElement('script');
+    ubx.type = 'text/javascript'; ubx.async = true;
+    ubx.src = '//d21gpk1vhmjuf5.cloudfront.net/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ubx);
+})();
+
+(function(){
+    if(typeof Unbxd === 'undefined')
+        Unbxd = {};
+    Unbxd.getBaseUrl = function(){
+        return "<?php echo Mage::getBaseUrl(); ?>";
+    }
+    <?php if(Mage::helper('core')->isModuleEnabled('Unbxd_Searchcore')) { ?>
+	jQuery('.search-button').attr('unbxdattr','sq_bt')	
+	jQuery('#search'). attr("unbxdattr", "sq")
+    <?php  } ?>
+})();
+</script>
+<?php } ?>

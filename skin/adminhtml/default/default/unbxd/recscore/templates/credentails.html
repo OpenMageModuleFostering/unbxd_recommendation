@@ -1,0 +1,116 @@
+  <div class="row mar-0 magento-block pad-top-0">
+        <div class="col-md-60 col-sm-60 ">
+            <div class="row mar-0">
+                <div class="col-md-60 col-sm-60 col-xs-60  magento-inner-block brd-btm-0 pad-top-20 pad-btm-20 top-rad">
+                    <div class="row mar-0">
+                        <div class="col-md-60 border-0 pad-0 magento-head ">
+                            Authenticate the Unbxd Module
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-60 col-sm-60 col-xs-60  magento-inner-block brd-btm-none">
+                    <div class="row mar-0">
+                        <div class="col-md-60 magento-text text1 ">
+                            You will need an Unbxd Account in order to authenticate the Unbxd module.
+                        </div>
+                    </div>
+                    <div class="row mar-0">
+                        <div class="col-md-60 magento-text text1 ">
+                            Create an <a href="//dashboard.unbxd.com/recommendations/#/register" target="_blank" style="color:#45b5c1;"> Unbxd Account </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row mar-0">
+                <div class="col-md-60 col-sm-60 col-xs-60  magento-landing-block mar-btm-20 btm-rad">
+
+                    <div class="row mar-0">
+                        <div class="col-md-23 ">
+                            <div class="row mar-0">
+                                <div class="col-md-60 col-sm-60 col-xs-60 magento-label mar-btm-7">
+                                    Your Site Key
+                                </div>
+                            </div>
+                            <div class="row mar-0">
+                                <div class="col-md-48 col-sm-20 col-xs-60">
+                                    <input type="{{#if step1}}password{{else}}text{{/if}}" class="magento-input" placeholder="Eg: AHS234dhbcskdj23jsd" value={{site_key}}>
+                                </div>
+                                <div class="col-md-10 col-sm-20 col-xs-60 clickable-btn magento-tooltip box-35"
+                                 data-content={{config.tooltips.sitekey}}
+                                 data-container="#innerContainr"  >
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-23 ">
+                            <div class="row mar-0">
+                                <div class="col-md-60 col-sm-60 col-xs-60 magento-label mar-btm-7">
+                                    Secret Key
+                                </div>
+                            </div>
+                            <div class="row mar-0">
+                                <div class="col-md-48 col-sm-20 col-xs-60">
+                                    <input  type="{{#if step1}}password{{else}}text{{/if}}" class="magento-input" placeholder="Eg: AHS234dhbcskdj23jsd" value={{secret_key}} >
+                                </div>
+                               <div  class="col-md-10 col-sm-20 col-xs-60 clickable-btn magento-tooltip box-35" 
+                               data-content={{config.tooltips.secretkey}} 
+                               data-container="#innerContainr" >
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+          
+
+            {{#if step1}}
+                <div class="row mar-0">
+                    <div class="col-md-60 magento-success-block mar-btm-20 pad-left-50">
+                        <div class="row mar-0 ">
+                            <div class="col-md-10 magento-analytics-tick-green pad-left-15 pad-right-15">
+
+                            </div>
+                            <div class="col-md-43 mar-top-10 pad-rgt-0 pad-left-15 pad-right-15">
+                                <div class="row mar-0">
+                                    <div class="col-md-60 col-sm-60 col-xs-60 magento-success-block-head">
+                                        Authentication has been succesful
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-13 pad-left-15 pad-right-15">
+                                    <div on-click="reauthenticate" class="button-reauth-magento mar-top-5 width-170 pull-right clickable-btn">
+                                        REAUTHENTICATE
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            {{else}}
+                <div class="row mar-0">
+                    <div on-click="authenticate" class="col-md-20 
+                                button-black-magento 
+                                {{#if btnDisabled}}disabled-btn{{/if}} 
+                                {{#if step1}}disabled-btn{{/if}} 
+                                width-190 clickable-btn unbxd-mar-left-30 unbxd-mar-btm-20 " style="margin:0px auto;float:none;">
+
+                        <div style="color: #fff !important;">
+                            AUTHENTICATE
+                        </div>
+                    </div>
+                    <div class="unbxd-err-msg unbxd-center-div " style="margin-left: 14% !important;">
+                        {{errorMsg}}
+                    </div>
+                    <div class="unbxd-success-msg unbxd-center-div" style="margin-left: 14% !important;">
+                        {{successMsg}}
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+
+    
+
