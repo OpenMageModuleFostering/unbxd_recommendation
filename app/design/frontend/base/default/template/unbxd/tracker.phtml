@@ -7,9 +7,17 @@ var UnbxdSiteName = "<?php echo Mage::getResourceModel('unbxd_recommendation/con
 var UnbxdApiKey = "<?php echo Mage::getResourceModel('unbxd_recommendation/config')
 ->getValue(Mage::app()->getWebsite()->getId(), Unbxd_Recommendation_Helper_Confighelper::API_KEY) ?>";
 
+<?php $category = Mage::registry("current_category");
+ if (isset($category)) { ?>
+category = "<?php echo $category->getName(); ?>";
+<?php } ?>
+
 if(typeof UnbxdWidgetsConf == 'undefined' || UnbxdWidgetsConf == null) {
     var UnbxdWidgetsConf = {
         currency: "<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>"
+        <?php if (isset($category)) { ?>
+            ,category:"<?php echo $category->getName(); ?>"
+        <?php } ?>
     };
 }
 /* * * DON'T EDIT BELOW THIS LINE * * */

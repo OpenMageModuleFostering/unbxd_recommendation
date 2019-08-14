@@ -64,6 +64,7 @@ class Unbxd_Recommendation_Model_Api_Task_Widget extends Unbxd_Recommendation_Mo
         }
 
         $pk = $this->getPrimaryToken();
+        $pk = rawurlencode($pk);
 
         if ($pk != '') {
             static::$url = static::RECOMMENDATION_API . "v1.0/$apiKey/$siteKey/$widget/$pk";
