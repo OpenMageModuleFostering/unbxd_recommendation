@@ -226,7 +226,7 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
         return $categories;
     }
 
-    public function getUniqueId($product) {
+    public function getUniqueId($product, $item=null) {
         $type= null;
         if($product->hasData('type_id')) {
             $type = $product->getData('type_id');
@@ -243,11 +243,22 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
                 $productId = $product->getData('entity_id');
                 break;
             case 'simple':
-                if ($product->getParentItem() != null)	{
-                    $productId = $product->getParentItem()->getProductId();
-                } else {
-                    $productId = $product->getData('entity_id');
+                if ($item != null && $item instanceof Mage_Sales_Model_Order) {
+			if($item->getParentItem() != null)	{
+                    		$productId = $item->getParentItem()->getProductId();
+				return $productId;
+			}
                 }
+		$parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
+		if(!isset($parentIds) || sizeof($parentIds) == 0) {
+			$parentIds = Mage::getModel('catalog/product_type_grouped')->getParentIdsByChild($product->getId());
+			if(isset($parentIds) && sizeof($parentIds) > 0) {
+				return $parentIds[0];
+			}
+                } else {
+			return $parentIds[0];
+		}
+                $productId = $product->getData('entity_id');
                 break;
             default:
                 $productId = $product->getData('entity_id');

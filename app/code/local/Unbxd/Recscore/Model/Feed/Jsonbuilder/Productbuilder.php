@@ -457,7 +457,13 @@ class Unbxd_Recscore_Model_Feed_Jsonbuilder_Productbuilder extends
 	*/
 	public function convertDataType($product, $fields) {
 		foreach($product as $fieldName => $value) {
-			if($fieldName != "associatedProducts") {
+			if($fieldName != "associatedProducts" && is_array($value)) {
+				$processedValue = array();
+				foreach($value as $eachValue) {
+					$processedValue[] = $this->convertDataTypeByValue($fields[$fieldName], $eachValue);
+				}
+				$product[$fieldName] = $processedValue; 
+			} else if($fieldName != "associatedProducts") {
 				$product[$fieldName] = $this->convertDataTypeByValue($fields[$fieldName], $value);
 			}
 		}
@@ -523,7 +529,7 @@ class Unbxd_Recscore_Model_Feed_Jsonbuilder_Productbuilder extends
 		} else if ($data_type[Unbxd_Recscore_Model_Field::datatype] == self::DATE) {
 			return $this->getDateValues($value);
 		}
-		return $value;
+		return "" . $value;
 	}
 
 	/*

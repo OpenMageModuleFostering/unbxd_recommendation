@@ -20,17 +20,18 @@ class Unbxd_Recscore_Model_Observer {
             Mage::helper('unbxd_recscore')->log(Zend_Log::ERR, 'CART_TRACKER:product is not a valid type');
             return $this;
         }
+	$uniqueId = Mage::helper('unbxd_recscore/feedhelper')->getUniqueId($product);
         $response = Mage::getModel('unbxd_recscore/api_task_trackcart')
-            ->setData('data', array('pid' => Mage::helper('unbxd_recscore/feedhelper')->getUniqueId($product),
+            ->setData('data', array('pid' => $uniqueId,
                 'visit_type' => 'repeat'))
             ->setData('ip', isset($_SERVER['HTTP_X_FORWARDED_FOR'])?$_SERVER['HTTP_X_FORWARDED_FOR']:$_SERVER['REMOTE_ADDR'])
             ->setData('agent', $_SERVER['HTTP_USER_AGENT'])
             ->prepare(Mage::app()->getWebsite())
             ->process();
-        $errors = $response->getErrors();
-        if(sizeof($errors) > 0) {
+	Mage::helper('unbxd_recscore')->log(Zend_Log::DEBUG, "CART_TRACKER: request with uniqueId ".$uniqueId);
+        if(!$response->isSuccess()) {
             Mage::helper('unbxd_recscore')
-                ->log(Zend_Log::ERR, 'CART_TRACKER:request failed because ' .json_encode($errors));
+                ->log(Zend_Log::ERR, 'CART_TRACKER:request failed because ' .json_encode($response->getErrors()));
         }
 		return $this;
 	}
@@ -50,9 +51,9 @@ class Unbxd_Recscore_Model_Observer {
             Mage::helper('unbxd_recscore')->log(Zend_Log::ERR, 'ORDER_TRACKER:payment is not a valid type');
             return $this;
         }
-        $items = $payment->getOrder()->getItemsCollection();
+        $items = $payment->getOrder()->getAllVisibleItems();
 
-        if($items instanceof Varien_Data_Collection) {
+        if(!is_array($items)) {
             return $this;
         }
 
@@ -63,21 +64,23 @@ class Unbxd_Recscore_Model_Observer {
                 continue;
             }
             $product =$item->getProduct();
-            if($product instanceof Mage_Catalog_Model_Product) {
+            if(!$product instanceof Mage_Catalog_Model_Product) {
                 return $this;
             }
+	    $uniqueId = Mage::helper('unbxd_recscore/feedhelper')->getUniqueId($product, $item);
             $response = Mage::getModel('unbxd_recscore/api_task_trackorder')
                 ->setData('data',
                     array('visit_type' => 'repeat',
-                        'pid' => Mage::helper('unbxd_recscore/feedhelper')->getUniqueId($product),
+                        'pid' => $uniqueId,
                         'qty' => $item->getQtyOrdered(),
                         'price' => $item->getPriceInclTax()))
                 ->setData('ip', isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'])
                 ->setData('agent', $_SERVER['HTTP_USER_AGENT'])
                 ->prepare(Mage::app()->getWebsite())
                 ->process();
+	    Mage::helper('unbxd_recscore')->log(Zend_Log::DEBUG, "ORDER_TRACKER: request with uniqueId ".$uniqueId);
 
-            if ($response->isSuccess() && is_array($response->getErrors()) && sizeof($response->getErrors()) > 0) {
+	    if(!$response->isSuccess()) {
                 Mage::helper('unbxd_recscore')
                     ->log(Zend_Log::ERR, 'ORDER_TRACKER:request failed because ' . json_encode($response->getErrors()));
             }
@@ -97,7 +100,7 @@ class Unbxd_Recscore_Model_Observer {
                   return;
         }
         $websiteCollection = Mage::getModel('core/website')->getCollection()->load();
-        if($websiteCollection instanceof Varien_Data_Collection) {
+        if(!$websiteCollection instanceof Varien_Data_Collection) {
             return $this;
         }
         foreach ($websiteCollection as $website) {
@@ -122,7 +125,7 @@ class Unbxd_Recscore_Model_Observer {
                   return;
         }
         $websiteCollection = Mage::getModel('core/website')->getCollection()->load();
-        if($websiteCollection instanceof Varien_Data_Collection) {
+        if(!$websiteCollection instanceof Varien_Data_Collection) {
             return $this;
         }
         foreach ($websiteCollection as $website) {
