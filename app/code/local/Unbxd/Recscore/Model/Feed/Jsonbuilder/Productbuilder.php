@@ -35,17 +35,28 @@ class Unbxd_Recscore_Model_Feed_Jsonbuilder_Productbuilder extends
 			if($this->skipProduct($website, $product)) {
 				continue;
 			}
+			$productArray = $this->getProduct($website, $product, $fields, $copyFields);
+			$productArray = $this->postProcessProduct($productArray, $fields, false);
+			if(!$this->whetherOOSproductsToBeIncluded($website, $productArray)) {
+				continue;
+			}
 			if(!$firstLoop) {
 				$content = $content . ",";
 			}
-
-			$productArray = $this->getProduct($website, $product, $fields, $copyFields);
-			$productArray = $this->postProcessProduct($productArray, $fields, false);
 			$content=$content.json_encode($productArray);
 			$firstLoop = false;
 		}
 
 		return rtrim($content, ",");
+	}
+
+	public function whetherOOSproductsToBeIncluded($website, $productArray) {
+		if(!Mage::helper('unbxd_recscore')
+			->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_OUT_OF_STOCK) &&
+			array_key_exists(Unbxd_Recscore_Model_Resource_Field::AVAILABILITY, $productArray)) {
+				return $productArray[Unbxd_Recscore_Model_Resource_Field::AVAILABILITY] == "true"?true:false;
+		}
+		return true;
 	}
 
 	/**
@@ -55,6 +66,12 @@ class Unbxd_Recscore_Model_Feed_Jsonbuilder_Productbuilder extends
 	 * @return bool
 	 */
 	public function skipProduct(Mage_Core_Model_Website $website, $product) {
+		if (!Mage::helper('unbxd_recscore')
+			->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_OUT_OF_STOCK)
+			&& !is_null($this->isSalableWithBasicAttr($product))) {
+			return $this->isSalableWithBasicAttr($product);
+		}
+
 		$filters = $this->_getFeedHelper()->getFilters($website);
 		foreach($filters as $key=>$filter) {
 			if($this->_getFeedHelper()->isMultiSelect($key)) {
@@ -104,9 +121,12 @@ class Unbxd_Recscore_Model_Feed_Jsonbuilder_Productbuilder extends
 			if(!is_null($attributeValue)) {
 				$productArray[$unbxdFieldName] = $attributeValue;
 			}
-		} else if( $fields[$unbxdFieldName][Unbxd_Recscore_Model_Field::multivalued]){
+		} else if( Mage::helper('unbxd_recscore/feedhelper')->isMultiSelectDatatype($columnHeader)){
 			// handling the array/ multiselect attribute
 			$attributeValue = $this->_getMultiSelectAttribute($columnHeader, $product);
+			if(sizeof($attributeValue) == 1) {
+				$attributeValue = $attributeValue[0];
+			}
 			if(!is_null($attributeValue)) {
 				$productArray[$unbxdFieldName] = $attributeValue;
 			}
@@ -150,16 +170,30 @@ class Unbxd_Recscore_Model_Feed_Jsonbuilder_Productbuilder extends
 			$productArray = $category + $productArray;
 
 			$productArray[Unbxd_Recscore_Model_Resource_Field::AVAILABILITY] =
-				$product->isSalable()? "true": "false";
+				$this->isSalable($product, $productArray)? "true": "false";
 			if(array_key_exists('final_price', $fields)) {
 				$productArray['final_price'] = $product->getFinalPrice();
 			}
 			if(array_key_exists('url_path', $fields)) {
 				$productArray['url_path'] = $product->getProductUrl();
 			}
-
+		} else {
+			$productArray[Unbxd_Recscore_Model_Resource_Field::AVAILABILITY_ASSOCIATED] = $this->isSalable($product,array())?"true":"false";
 		}
 		return $productArray;
+	}
+
+	/**
+	 * Retrieve Manage Stock data wrapper
+	 *
+	 * @return int
+	 */
+	private function isManageStockEnabled($product)
+	{
+		if ($product->getUseConfigManageStock()) {
+			return (int) Mage::getStoreConfigFlag(Mage_CatalogInventory_Model_Stock_Item::XML_PATH_MANAGE_STOCK);
+		}
+		return $product->getData('manage_stock') == "0"?false:true;
 	}
 
 	/**
@@ -275,34 +309,134 @@ class Unbxd_Recscore_Model_Feed_Jsonbuilder_Productbuilder extends
 		return $unbxdFieldName;
 	}
 
+	private function isSalableWithBasicAttr($product) {
+		if($product->getData("status") != 1) {
+			return false;
+		}
+		if($product->getTypeId() == "simple" ||
+			$product->getTypeId() == "downloadable" ||
+			$product->getTypeId() == "virtual") {
+			if (!$this->isManageStockEnabled($product)) {
+				return true;
+			}
+			return $product->getData('is_in_stock')?true:false;
+		}
+		if(!$product->getData('is_in_stock')) {
+			return false;
+		}
+		return null;
+	}
+
+	private function isSalable($product, $productArray) {
+		if(is_null($this->isSalableWithBasicAttr($product))) {
+			return $this->isSalableChildProducts($productArray);
+		}
+		return $this->isSalableWithBasicAttr($product);
+	}
+
+	private function isSalableChildProducts($productArray) {
+		if(array_key_exists("associatedProducts", $productArray)) {
+			foreach( $productArray["associatedProducts"] as $childProduct) {
+				if($childProduct["availabilityAssociated"][0] == "true"){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * gives the children in form of array
 	 */
-	public function addChildrens(Mage_Core_Model_Website $website,  $product, $fields, $copyFields, $productArray) {
+	private function addChildrens(Mage_Core_Model_Website $website,  $product, $fields, $copyFields, $productArray) {
 
 		$type = $product->getData('type_id');
-		if ($type == "configurable" || $type == "grouped" ) {
-			$associatedProducts = array();
-			$conf = Mage::getModel('catalog/product_type_configurable')->setProduct($product);
-			$childrens = $conf->getUsedProductCollection()
-				->addAttributeToSelect('*')
-				->addFilterByRequiredOptions()
-				->joinField("qtyAssociated", "cataloginventory_stock_item", 'qty', 'product_id=entity_id', null, 'left');
-			foreach ($childrens as $children)
-			{
-				$childProduct = $this->getProduct($website, $children, $fields, $copyFields, true);
-				if(isset($childProduct) && sizeof($childProduct) > 0 ) {
-					$childProduct = $this->postProcessProduct($childProduct, $fields, true);
-					$associatedProducts[] = $childProduct;
-				}
-			}
-			if( sizeof($associatedProducts) > 0) {
-				$productArray["associatedProducts"] = $associatedProducts;
-			}
-			return $productArray;
+		if($type == "configurable") {
+			return $this->getConfigurableChildProduct($website, $product, $fields, $copyFields, $productArray);
+		} else if( $type == "grouped") {
+			return $this->getGroupedChildProduct($website, $product, $fields, $copyFields, $productArray);
+		} else if( $type == "bundle") {
+			return $this->getBundledChildProduct($website, $product, $fields, $copyFields, $productArray);
 		} else {
 			return $productArray;
 		}
+	}
+
+	private function getBundledChildProduct(Mage_Core_Model_Website $website, Mage_Catalog_Model_Product $product,
+											$fields, $copyFields, $productArray) {
+		$adapter = Mage::getSingleton("core/resource");
+		$_catalogInventoryTable = method_exists($adapter, 'getTableName')
+			? $adapter->getTableName('cataloginventory_stock_item') : 'cataloginventory_stock_item';
+		$stockfields = array("qty" => "qty", "manage_stock" => "manage_stock",
+			"use_config_manage_stock" => "use_config_manage_stock", "is_in_stock" => "is_in_stock");
+		$associatedProducts = $product->getTypeInstance(true)
+			->getSelectionsCollection($product->getTypeInstance(true)->getOptionsIds($product), $product)
+			->addAttributeToSelect('*')
+			->joinTable($_catalogInventoryTable, 'product_id=entity_id', $stockfields, null, 'left');
+		if($this->_getFeedHelper()->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_ENABLED_CHILD_PRODUCT)) {
+			$associatedProducts->addAttributeToFilter('status', 1);
+		}
+		if(!$this->_getFeedHelper()->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_OUT_OF_STOCK_CHILD_PRODUCT)) {
+			$associatedProducts->addAttributeToFilter('qty',array('gt' => 1));
+		}
+		return $this->processAssociatedProducts($website, $associatedProducts, $fields, $copyFields, $productArray);
+	}
+
+	private function getGroupedChildProduct(Mage_Core_Model_Website $website, Mage_Catalog_Model_Product $product,
+											$fields, $copyFields, $productArray) {
+		$adapter = Mage::getSingleton("core/resource");
+		$_catalogInventoryTable = method_exists($adapter, 'getTableName')
+			? $adapter->getTableName('cataloginventory_stock_item') : 'cataloginventory_stock_item';
+		$stockfields = array("qty" => "qty", "manage_stock" => "manage_stock",
+			"use_config_manage_stock" => "use_config_manage_stock", "is_in_stock" => "is_in_stock");
+		$associatedProducts = $product->getTypeInstance(true)
+			->getAssociatedProductCollection($product)
+			->addAttributeToSelect('*')
+			->joinTable($_catalogInventoryTable, 'product_id=entity_id', $stockfields, null, 'left');
+		if($this->_getFeedHelper()->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_ENABLED_CHILD_PRODUCT)) {
+			$associatedProducts->addAttributeToFilter('status', 1);
+		}
+		if(!$this->_getFeedHelper()->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_OUT_OF_STOCK_CHILD_PRODUCT)) {
+			$associatedProducts->addAttributeToFilter('qty',array('gt' => 1));
+		}
+		return $this->processAssociatedProducts($website, $associatedProducts, $fields, $copyFields, $productArray);
+	}
+
+	private function getConfigurableChildProduct(Mage_Core_Model_Website $website,  $product, $fields,
+												 $copyFields, $productArray) {
+		$conf = Mage::getModel('catalog/product_type_configurable')->setProduct($product);
+		$stockfields = array("qty" => "qty", "manage_stock" => "manage_stock",
+			"use_config_manage_stock" => "use_config_manage_stock", "is_in_stock" => "is_in_stock");
+		$adapter = Mage::getSingleton("core/resource");
+		$_catalogInventoryTable = method_exists($adapter, 'getTableName')
+			? $adapter->getTableName('cataloginventory_stock_item') : 'catalog_category_product_index';
+		$childrens = $conf->getUsedProductCollection()
+			->addAttributeToSelect('*')
+			->addFilterByRequiredOptions()
+			->joinTable($_catalogInventoryTable, 'product_id=entity_id', $stockfields, null, 'left');
+		if($this->_getFeedHelper()->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_ENABLED_CHILD_PRODUCT)) {
+			$childrens->addAttributeToFilter('status', 1);
+		}
+		if(!$this->_getFeedHelper()->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_OUT_OF_STOCK_CHILD_PRODUCT)) {
+			$childrens->addAttributeToFilter('qty', array('gt' => 1));
+		}
+		return $this->processAssociatedProducts($website, $childrens, $fields, $copyFields, $productArray);
+	}
+
+	private function processAssociatedProducts(Mage_Core_Model_Website $website,  $childProducts,
+											   $fields, $copyFields, $productArray) {
+		$associatedProducts = array();
+		foreach ($childProducts as $children) {
+			$childProduct = $this->getProduct($website, $children, $fields, $copyFields, true);
+			if(isset($childProduct) && sizeof($childProduct) > 0 ) {
+				$childProduct = $this->postProcessProduct($childProduct, $fields, true);
+				$associatedProducts[] = $childProduct;
+			}
+		}
+		if( sizeof($associatedProducts) > 0) {
+			$productArray["associatedProducts"] = $associatedProducts;
+		}
+		return $productArray;
 	}
 
 	/**

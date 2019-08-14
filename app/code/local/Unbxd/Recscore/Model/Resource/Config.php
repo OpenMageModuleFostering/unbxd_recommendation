@@ -34,8 +34,8 @@ class Unbxd_Recscore_Model_Resource_Config extends Mage_Core_Model_Mysql4_Abstra
         $adapter = $this->_getReadAdapter();
         $select = $adapter->select()
             ->from($this->_unbxdConfigTable, Unbxd_Recscore_Model_Config::VALUE)
-            ->where('`'.Unbxd_Recscore_Model_Config::WEBSITE_ID.'` = ?', (int)$websiteId)
-            ->where('`'.Unbxd_Recscore_Model_Config::KEY.'` = ?', $key);
+            ->where(Unbxd_Recscore_Model_Config::WEBSITE_ID.' = ?', (int)$websiteId)
+            ->where(Unbxd_Recscore_Model_Config::KEY.' = ?', $key);
         $rows = $adapter->fetchAll($select);
         $values = array();
         foreach($rows as $row) {
@@ -91,12 +91,12 @@ class Unbxd_Recscore_Model_Resource_Config extends Mage_Core_Model_Mysql4_Abstra
         }
 
         $config = Mage::getModel('unbxd_recscore/config')->getCollection()
-            ->addFieldToFilter('`'.Unbxd_Recscore_Model_Config::KEY.'`', $key)
-            ->addFieldToFilter('`'.Unbxd_Recscore_Model_Config::WEBSITE_ID.'`', (int)$website_id)
+            ->addFieldToFilter(Unbxd_Recscore_Model_Config::KEY, $key)
+            ->addFieldToFilter(Unbxd_Recscore_Model_Config::WEBSITE_ID, (int)$website_id)
             ->getFirstItem();
 
         $config->setWebsiteId($website_id)
-            ->setKey($key)
+            ->setUnbxdKey($key)
             ->setValue($value)
             ->save();
     }
@@ -107,7 +107,7 @@ class Unbxd_Recscore_Model_Resource_Config extends Mage_Core_Model_Mysql4_Abstra
         foreach($values as $eachValue) {
             Mage::getModel('unbxd_recscore/config')
                 ->setWebsiteId($websiteId)
-                ->setKey($key)
+                ->setUnbxdKey($key)
                 ->setValue($eachValue)
                 ->save();
         }
@@ -116,11 +116,11 @@ class Unbxd_Recscore_Model_Resource_Config extends Mage_Core_Model_Mysql4_Abstra
 
     public function deleteKey($websiteId, $key) {
         $write = Mage::getSingleton("core/resource")->getConnection("core_write");
-        $query = "DELETE FROM `unbxd_recommendation_conf` WHERE `" . Unbxd_Recscore_Model_Config::KEY . "` = :key"
-            . " and `" . Unbxd_Recscore_Model_Config::WEBSITE_ID . "` = :website_id";
+        $query = "DELETE FROM unbxd_recommendation_conf WHERE " . Unbxd_Recscore_Model_Config::KEY . " = :key"
+            . " and " . Unbxd_Recscore_Model_Config::WEBSITE_ID . " = :website_id";
         $binds = array(
-            'key' => $key,
-            'website_id' => $websiteId
+            Unbxd_Recscore_Model_Config::KEY => $key,
+            Unbxd_Recscore_Model_Config::WEBSITE_ID => $websiteId
         );
         $write->query($query, $binds);
 
@@ -198,7 +198,7 @@ class Unbxd_Recscore_Model_Resource_Config extends Mage_Core_Model_Mysql4_Abstra
 
     public function deleteAll($websiteId) {
         $write = Mage::getSingleton("core/resource")->getConnection("core_write");
-        $query = "DELETE FROM `unbxd_recommendation_conf` WHERE `" . Unbxd_Recscore_Model_Config::WEBSITE_ID . "` = :website_id";
+        $query = "DELETE FROM unbxd_recommendation_conf WHERE " . Unbxd_Recscore_Model_Config::WEBSITE_ID . " = :website_id";
         $binds = array(
             'website_id' => $websiteId
         );

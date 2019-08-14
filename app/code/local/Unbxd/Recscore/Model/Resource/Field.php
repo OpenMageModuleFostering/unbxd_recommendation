@@ -31,6 +31,20 @@ class Unbxd_Recscore_Model_Resource_Field extends Mage_Core_Model_Mysql4_Abstrac
     const CATEGORY_NAME = "category";
 
     const AVAILABILITY = 'availability';
+
+    const QTY_ASSOCIATED = "qtyAssociated";
+
+    const AVAILABILITY_ASSOCIATED = "availabilityAssociated";
+
+    const QTY_MANAGE_ASSOCIATED = "manage_stockAssociated";
+
+    const QTY_CONFIG_USE_MANAGE_STOCK = "use_config_manage_stock";
+
+    const QTY_CONFIG_USE_MANAGE_STOCK_ASSOCIATED = "use_config_manage_stockAssociated";
+
+    const QTY = "qty";
+
+    const QTY_MANAGE = "manage_stock";
     /**
      * Unbxd Field Config table Name
      *

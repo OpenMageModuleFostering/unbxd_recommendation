@@ -72,21 +72,18 @@ class Unbxd_Recscore_Model_Resource_Product_Collection extends
         $adapter = Mage::getSingleton("core/resource");
 	    $visiblityCondition = array('in' => array(2,3,4));
         $_catalogInventoryTable = method_exists($adapter, 'getTableName')
-            ? $adapter->getTableName('cataloginventory_stock_item') : 'catalog_category_product_index';
+            ? $adapter->getTableName('cataloginventory_stock_item') : 'cataloginventory_stock_item';
+        $stockfields = array("qty" => "qty", "manage_stock" => "manage_stock",
+            "use_config_manage_stock" => "use_config_manage_stock", "is_in_stock" => "is_in_stock");
 
         $this
             ->addWebsiteFilter($website->getWebsiteId())
-            ->joinField("qty", $_catalogInventoryTable, 'qty', 'product_id=entity_id', null, 'left')
             ->addAttributeToSelect('*')
+            ->joinTable($_catalogInventoryTable, 'product_id=entity_id', $stockfields, null, 'left')
             ->addAttributeToFilter('status',1)
             ->addCategoryIds()
 	        ->addAttributeToFilter('visibility',$visiblityCondition)
             ->addPriceData(Mage_Customer_Model_Group::NOT_LOGGED_IN_ID, $website->getWebsiteId());
-
-        if (!Mage::helper('unbxd_recscore')
-            ->isConfigTrue($website, Unbxd_Recscore_Helper_Constants::INCLUDE_OUT_OF_STOCK)) {
-            Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($this);
-        }
 
         Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($this);
         #Mage::getSingleton('catalog/product_visibility')->addVisibleInSiteFilterToCollection($this);

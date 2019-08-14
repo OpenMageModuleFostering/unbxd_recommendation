@@ -1,9 +1,9 @@
 {
     "name": "OpenMageModuleFostering/unbxd_recommendation",
     "type": "magento-module",
-    "license": "OSL-v3.0",
+    "license": "OSL",
     "homepage": "",
-    "description": "recommendation module",
+    "description": "Unbxd module to serve recommendations",
     "authors": [
     {
         "name": "ananthesh",

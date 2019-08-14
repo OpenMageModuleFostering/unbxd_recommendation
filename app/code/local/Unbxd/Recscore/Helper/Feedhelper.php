@@ -24,6 +24,45 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
         }
         return false;
     }
+
+    public function getAllFilterableAttributes(Mage_Core_Model_Website $website) {
+
+        $filterableAttributes = array();
+        $stores = $website->getStores();
+        $this->tempCategoriesScanned = array();
+        foreach($stores as $store) {
+            Mage::app()->setCurrentStore($store);
+            $categoryId = $store->getRootCategoryId();
+            $category = Mage::getModel('catalog/category')->load($categoryId);
+            $this->tempCategoriesScanned[] = $categoryId;
+            $filterableAttributes = array_merge($filterableAttributes, $this->getFilterableAttributesForCategory($category));
+        }
+        return array_unique($filterableAttributes);
+    }
+
+    public function getFilterableAttributesForCategory($category) {
+        if(array_key_exists($category->getId(), $this->tempCategoriesScanned)) {
+            return array();
+        } else {
+            $this->tempCategoriesScanned[] = $category->getId();
+        }
+        $filterableAttributes = array();
+        $layer = Mage::getModel("catalog/layer");
+        $layer->setCurrentCategory($category);
+        $attributes = $layer->getFilterableAttributes();
+        foreach ($attributes as $attribute) {
+            $filterableAttributes[] = $attribute->getAttributeCode();
+        }
+        $childrenCategoryIds = $category->getAllChildren();
+        $childrenCategories = Mage::getModel('catalog/category')->getCollection()->addIdFilter($childrenCategoryIds)->load();
+        if(!is_null($childrenCategories)) {
+            foreach ($childrenCategories as $childrenCategory) {
+                $filterableAttributes = array_merge($filterableAttributes, $this->getFilterableAttributesForCategory($childrenCategory));
+            }
+        }
+        return array_unique($filterableAttributes);
+    }
+
     /**
      * function to get Category from the category id,
      * This checks it present in the global array 'categoryMap', if it is not there fetches from db
@@ -122,17 +161,36 @@ class Unbxd_Recscore_Helper_Feedhelper extends Unbxd_Recscore_Helper_Data {
      * @return bool
      */
     public function isMultiSelect($attributeName = ""){
-        if($attributeName == "status" || $attributeName == "visibility" || $attributeName == "entity_id" ){
+        if(!$this->excludeMultiSelectList($attributeName)) {
             return false;
         }
-        if($this->getFieldType($attributeName) == "select" ||
-            $this->getFieldType($attributeName) == "multiselect" ||
+        if( $this->isMultiSelectDatatype($attributeName)||
             $attributeName == Unbxd_Recscore_Model_Resource_Field::CATEGORY_IDS ||
             $attributeName == Unbxd_Recscore_Model_Resource_Field::CATEGORY_IDS_NAME ||
             $attributeName == Unbxd_Recscore_Model_Resource_Field::CAT_LEVEL_1_NAME ||
             $attributeName == Unbxd_Recscore_Model_Resource_Field::CAT_LEVEL_2_NAME ||
             $attributeName == Unbxd_Recscore_Model_Resource_Field::CAT_LEVEL_3_NAME ||
             $this->endsWith($attributeName, 'Associated')){
+            return true;
+        }
+        return false;
+    }
+
+    public function excludeMultiSelectList($attributeName = "") {
+        if($attributeName == "status" || $attributeName == "visibility" || $attributeName == "entity_id" ){
+            return false;
+        }
+        return true;
+    }
+
+
+    public function isMultiSelectDatatype($attributeName = "") {
+        if(!$this->excludeMultiSelectList($attributeName)) {
+            return false;
+        }
+
+        if($this->getFieldType($attributeName) == "select" ||
+            $this->getFieldType($attributeName) == "multiselect") {
             return true;
         }
         return false;

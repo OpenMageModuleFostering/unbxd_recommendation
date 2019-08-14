@@ -299,6 +299,27 @@ class Unbxd_Recscore_ConfigController extends Mage_Core_Controller_Front_Action 
         }
     }
 
+    public function filterablesAction() {
+        $website = $this->_prepare();
+        if (is_null($website)) {
+            return;
+        }
+        if ($this->getRequest()->getMethod() == Zend_Http_Client::GET) {
+            $filterablAttributes = Mage::helper("unbxd_recscore/feedhelper")->getAllFilterableAttributes($website);
+            if(is_array($filterablAttributes)) {
+                $this->getResponse()->setBody(json_encode(array('success' => false, "fields"=>$filterablAttributes)));
+                return;
+            }
+            $this->getResponse()->setBody(json_encode(array('success' => true)));
+            return;
+        } else {
+            $this->getResponse()->setBody(json_encode(array('success' => false,
+                'errors' => array('message' => 'Invalid method'))));
+
+        }
+
+    }
+
 
 
     public function dimensionmapAction()

@@ -257,9 +257,6 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
             $collection->getSelect()->limit($this->pageSize, ($pageNum) * $this->pageSize);
             $collection->load();
         }
-        if($operation == Unbxd_Recscore_Model_Feed_Tags::ADD) {
-            Mage::getModel('cataloginventory/stock_status')->addStockStatusToProducts($collection);
-        }
         return $collection;
     }
 
@@ -416,7 +413,6 @@ class Unbxd_Recscore_Model_Feed_Feedcreator {
                 ->isMultiSelect($eachfield->getFieldName());
             $this->fields[$eachfield->getFieldName()] = $field;
         }
-        $this->fields["entity_id"] = Mage::getModel('unbxd_recscore/field')->getField('longText', "false", "false");
         $this->_setImageConf($website);
 
     }

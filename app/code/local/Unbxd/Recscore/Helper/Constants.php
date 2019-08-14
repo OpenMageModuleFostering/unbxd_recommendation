@@ -161,6 +161,12 @@ class Unbxd_Recscore_Helper_Constants extends Mage_Core_Helper_Abstract {
 
     const INCLUDE_CHILD_PRODUCT = 'include_child_product';
 
+    const INCLUDE_ENABLED_CHILD_PRODUCT = 'include_only_enabled_child_product';
+
+    const INCLUDE_OUT_OF_STOCK_CHILD_PRODUCT = 'include_out_of_stock_child_product';
+
+    const INCLUDE_OUT_OF_STOCK_FROM_NON_CACHE = "include_out_of_stock_from_non_cache";
+
     const FEED_STATUS_UPLOADING = 'UPLOADING';
 
     const FEED_STATUS_UPLOADED_SUCCESSFULLY = 'UPLOADED SUCCESSFULL';

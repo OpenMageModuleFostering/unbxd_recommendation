@@ -7,11 +7,11 @@
  */
 abstract class Unbxd_Recscore_Model_Api_Task extends Varien_Object {
 
-    static $PLATFORM_API_BASE_URL = "http://accounts.unbxdapi.com/admin/";
+    static $PLATFORM_API_BASE_URL = "https://accounts.unbxdapi.com/admin/";
 
-    static $RECOMMENDATION_SETTINGS_URL = "http://starwreck.unbxdapi.com/";
+    static $RECOMMENDATION_SETTINGS_URL = "https://starwreck.unbxd.com/";
 
-    static $TRACKER_URL = "http://tracker.unbxdapi.com/";
+    static $TRACKER_URL = "https://tracker.unbxdapi.com/";
 
     const TIMEOUT = 30;
 

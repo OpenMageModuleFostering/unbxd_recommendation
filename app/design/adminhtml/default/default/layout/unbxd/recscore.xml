@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
-    <unbxd_recscore_router_index_index>
+    <adminhtml_unbxd_index>
         <reference name="menu">
             <action method="setActive"><menupath>unbxd_recommendation</menupath></action>
         </reference>
         <reference name="content">
             <block type="core/template" name="unbxd.conf"  template="unbxd/recommendation.phtml" />
         </reference>
-    </unbxd_recscore_router_index_index>
+    </adminhtml_unbxd_index>
 </layout>

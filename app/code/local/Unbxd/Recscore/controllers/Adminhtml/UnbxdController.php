@@ -5,7 +5,7 @@
  * @package Unbxd_Recscore
  * @author Unbxd Software Pvt. Ltd {
  */
-class Unbxd_Recscore_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action {
+class Unbxd_Recscore_Adminhtml_UnbxdController extends Mage_Adminhtml_Controller_Action {
 
     /**
      * @return void

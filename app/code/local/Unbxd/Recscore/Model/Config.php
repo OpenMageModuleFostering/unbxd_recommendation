@@ -9,7 +9,7 @@
  */
 class Unbxd_Recscore_Model_Config extends Mage_Core_Model_Abstract {
 
-    const KEY = "key";
+    const KEY = "unbxd_key";
 
     const VALUE = 'value';
 

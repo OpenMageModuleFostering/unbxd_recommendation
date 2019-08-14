@@ -3,7 +3,8 @@
     <menu>
         <unbxd translate="title" module="unbxd_recscore">
             <title>Unbxd</title>
-            <action>unbxdadmin/index</action>
+            <sort_order>99</sort_order>
+            <action>adminhtml/unbxd/</action>
         </unbxd>
     </menu>
 </config>

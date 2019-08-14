@@ -1,10 +1,19 @@
-<?php if(Mage::helper("unbxd_recscore")->isExecutable()) { ?>
+<?php if(Mage::helper("unbxd_recscore")->isExecutable()) {
+    $siteKey = "";
+    $apiKey = "";
+    try {
+        $siteKey = Mage::helper('unbxd_recscore')->getSiteName();
+        $apiKey = Mage::helper('unbxd_recscore')->getApiKey();
+    } catch(Exception $e) {
+        //ignore the exception
+    }
+    ?>
 <input type="hidden" id="jQueryBaseUrl" value="<?php echo Mage::getBaseUrl('js',
     Mage::app()->getFrontController()->getRequest()->isSecure()) ?>unbxd/jquery.js"/>
 <script type="text/javascript">
 /* * * CONFIGURATION * * */
-var UnbxdSiteName = "<?php echo Mage::helper('unbxd_recscore')->getSiteName(); ?>";
-var UnbxdApiKey = "<?php echo Mage::helper('unbxd_recscore')->getApiKey(); ?>";
+var UnbxdSiteName = "<?php echo $siteKey ?>";
+var UnbxdApiKey = "<?php echo $apiKey ?>";
 
 <?php $category = Mage::registry("current_category");
  if (isset($category)) { ?>
