@@ -1,0 +1,21 @@
+<script type="text/javascript">
+    <?php $product = Mage::registry('current_product'); ?>
+    var UnbxdWidgetsConf = {
+        currency : "<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>"
+        <?php if (isset($product)) { ?>
+        ,pid:"<?php echo Mage::helper('unbxd_recommendation/feedhelper')->getUniqueId($product); ?>"
+        <?php } ?>
+
+    };
+    <?php if (isset($product)) { ?>
+        pid = "<?php echo Mage::helper('unbxd_recommendation/feedhelper')->getUniqueId($product); ?>";
+    <?php } ?>
+    function triggerUnbxd() {
+        Unbxd.track("click", {"pid":pid, rank: "", box_type: ""});
+    }
+    if (window.addEventListener) {
+        window.addEventListener('load', triggerUnbxd, false);
+    } else {
+        window.attachEvent('onload', triggerUnbxd);
+    }
+</script>

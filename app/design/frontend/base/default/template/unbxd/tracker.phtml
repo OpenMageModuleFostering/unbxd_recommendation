@@ -1,0 +1,32 @@
+<input type="hidden" id="jQueryBaseUrl" value="<?php echo Mage::getBaseUrl('js') ?>unbxd/jquery.js"/>
+<script type="text/javascript">
+/* * * CONFIGURATION * * */
+var UnbxdSiteName = "<?php echo Mage::getResourceModel('unbxd_recommendation/config')
+->getValue(Mage::app()->getWebsite()->getId(), Unbxd_Recommendation_Helper_Confighelper::SITE_KEY) ?>";
+var UnbxdApiKey = "<?php echo Mage::getResourceModel('unbxd_recommendation/config')
+->getValue(Mage::app()->getWebsite()->getId(), Unbxd_Recommendation_Helper_Confighelper::API_KEY) ?>";
+
+if(typeof UnbxdWidgetsConf == 'undefined' || UnbxdWidgetsConf == null) {
+    var UnbxdWidgetsConf = {
+        currency: "<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>"
+    };
+}
+/* * * DON'T EDIT BELOW THIS LINE * * */
+(function() {
+  var ubx = document.createElement('script'); 
+  ubx.type = 'text/javascript'; ubx.async = true;
+  ubx.src = '//unbxd.s3.amazonaws.com/unbxdAnalytics.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ubx);
+})();
+
+(function() {
+    var ubx = document.createElement('script');
+    ubx.type = 'text/javascript'; ubx.async = true;
+    ubx.src = '<?php echo Mage::getBaseUrl('js') ?>unbxd/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ubx);
+})();
+
+function getBaseUrl() {
+    return "<?php echo Mage::getBaseUrl(); ?>";
+}
+</script>

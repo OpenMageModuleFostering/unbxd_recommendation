@@ -1,0 +1,14 @@
+<!-- UNBXD CATEGORY PAGE -->
+<script type="text/javascript">
+<?php $category = $this->getData('current_category');
+ if (isset($category)) { ?>
+    category = "<?php echo $category->getName(); ?>";
+<?php } ?>
+var UnbxdWidgetsConf = {
+    currency : "<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>"
+    <?php if (isset($category)) { ?>
+    ,pid:"<?php echo $category->getName(); ?>"
+    <?php } ?>
+
+};
+</script>

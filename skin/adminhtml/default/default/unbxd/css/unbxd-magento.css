@@ -1,0 +1,632 @@
+.container{
+	background-color: #f3f6f6;
+}
+.middle-nav-magento-dropdown, .background-grey{
+   background-color: #F3F6F6 !important;
+}
+.middle-nav-magento-dropdown{
+	top: 185px;
+}
+.top-200{
+	top:200px !important;
+}
+.top-185{
+	top: 185px !important;
+}
+.clickable-btn{
+	cursor: pointer;
+}
+.magento-active{
+	border-top: 1px solid #4e5253;
+	border-bottom: 1px solid #4e5253;
+	background: #45b5c1 url('../img/arrow-white.png') no-repeat 90%;
+}
+.site-key-help {
+	display: none;
+	top: 329px;
+	position: absolute;
+	left: 470px;
+}
+.secret-key-help{
+	display: none;
+	top: 329px;
+	position: absolute;
+	left: 870px;
+}
+.blue-link{
+	color: #11b3c7;
+	cursor: pointer;
+	padding-top: 13px;
+	padding-left: 10px;
+}
+.custom-attributes{
+	display: none;
+}
+.middle-nav-text {
+	padding-left: 5px;
+	color: #3c3f40;
+	font-size: 16px;
+	font-weight: 400;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-bottom: 0;
+}
+.chosen-drop{
+	z-index: 999999 !important;
+}
+.capitalize{
+	text-transform: capitalize;
+}
+.unbxd-table{
+
+border-right-style: solid;
+border-right-width: 1px;
+border-top-color: rgb(222, 226, 228);
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+border-top-style: solid;
+border-top-width: 1px;
+box-sizing: border-box;
+color: rgb(51, 51, 51);
+font-family: proxima-nova, Arial, sans-serif;
+font-size: 14px;
+font-style: normal;
+font-variant: normal;
+font-weight: normal;
+line-height: 20px;
+margin-bottom: 20px;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 0px;
+max-width: 100%;
+padding-bottom: 0px;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+width: 100%;
+}
+.unbxd-thead{
+color: rgb(51, 51, 51);
+font-family: proxima-nova, Arial, sans-serif;
+font-size: 14px;
+font-style: normal;
+font-variant: normal;
+font-weight: normal;
+height: 48px;
+line-height: 20px;
+
+}
+.unbxd-tr{
+	border-bottom-color: rgb(222, 226, 228);
+border-collapse: separate;
+border-left-color: rgb(222, 226, 228);
+border-right-color: rgb(222, 226, 228);
+border-top-color: rgb(222, 226, 228);
+box-sizing: border-box;
+color: rgb(51, 51, 51);
+font-family: proxima-nova, Arial, sans-serif;
+font-size: 14px;
+font-style: normal;
+font-variant: normal;
+font-weight: normal;
+height: 48px;
+line-height: 20px;
+margin-bottom: 0px;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 0px;
+padding-bottom: 0px;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+vertical-align: middle;
+}
+.unbxd-th{
+
+background-color: rgb(60, 63, 64);
+border-bottom-left-radius: 0px;
+border-bottom-right-radius: 0px;
+border-bottom-style: none;
+border-bottom-width: 0px;
+border-collapse: separate;
+border-right-color: rgb(255, 255, 255);
+border-right-style: solid;
+border-right-width: 1px;
+border-top-color: rgb(255, 255, 255);
+border-top-left-radius: 5px;
+border-top-right-radius: 0px;
+border-top-style: none;
+border-top-width: 0px;
+box-sizing: border-box;
+color: rgb(255, 255, 255);
+font-family: proxima-nova, Arial, sans-serif;
+font-size: 18px;
+font-style: normal;
+font-variant: normal;
+font-weight: normal;
+height: 48px;
+line-height: 25.7142868041992px;
+margin-bottom: 0px;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 0px;
+padding-bottom: 8px;
+padding-left: 20px;
+padding-right: 0px;
+padding-top: 15px;
+text-align: left;
+}
+.unbxd-tbody{
+	border-bottom-color: rgb(222, 226, 228);
+border-collapse: separate;
+border-left-color: rgb(222, 226, 228);
+border-right-color: rgb(222, 226, 228);
+border-top-color: rgb(222, 226, 228);
+box-sizing: border-box;
+color: rgb(51, 51, 51);
+display: table-row-group;
+font-family: proxima-nova, Arial, sans-serif;
+font-size: 14px;
+font-style: normal;
+font-variant: normal;
+font-weight: normal;
+height: 549px;
+line-height: 20px;
+margin-bottom: 0px;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 0px;
+padding-bottom: 0px;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+vertical-align: middle;
+width: 666px;
+}
+.unbxd-td{
+	border-collapse: separate;
+border-right-color: rgb(222, 226, 228);
+border-right-style: solid;
+border-right-width: 1px;
+border-top-color: rgb(221, 221, 221);
+border-top-style: solid;
+border-top-width: 1px;
+box-sizing: border-box;
+color: rgb(92, 101, 106);
+display: table-cell;
+font-family: proxima-nova, Arial, sans-serif;
+font-size: 16px;
+font-style: normal;
+font-variant: normal;
+font-weight: normal;
+height: 72px;
+line-height: 22.8571434020996px;
+margin-bottom: 0px;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 0px;
+padding-bottom: 15px;
+padding-left: 23px;
+padding-right: 100px;
+padding-top: 15px;
+text-transform: capitalize;
+
+}
+.width-45{
+	width: 45%;
+}
+.width-55{
+	width: 55%;
+}
+.width-50{
+	width: 50%;
+}
+.tr-row{
+	width: 100%;
+	height: 50px;
+
+}
+.td-right{
+	padding-top: 2px;
+	/*width: 55% !important;*/
+	float: right;
+	border-left: 1px solid #dee2e4 !important;
+	border-bottom: 1px solid #dee2e4 !important;
+	height: 100%;
+}
+.td-left{
+	float: left;
+	height: 100%;
+	padding-top: 19px;
+	padding-left: 32px;
+	font-size: 17px;
+	border-bottom: 1px solid #dee2e4 !important;
+}
+.magento-border-left{
+	border-left: 1px solid #dee2e4 !important;
+}
+.magento-border-right{
+	border-right: 1px solid #dee2e4 !important;
+}
+.unbxd-err{
+	float: right;
+	position: absolute;
+	left: 694px;
+	width: 200px;
+	padding-top: 7px;
+	color: red;
+}
+#selectSites + div.chosen-container {
+	width: 100% !important;
+}
+.width-100{
+	width: 100% !important;
+}
+.width-70{
+	width: 70% !important;
+}
+.width-100 > .chosen-container{
+	width: 100% !important;
+}
+.custom-attributes-td{
+	padding: 0;
+	padding-top: 4px;
+	padding-right: 3px;
+}
+.remove-row{
+	margin-top: 5px;
+	margin-left: 5px;
+	width: 21%;
+	height: 35px;
+	background-size: 100%;
+	background-image: url("../img/delete-raw.png");
+}
+.remove-row:hover{
+	background-image: url("../img/delete-raw-hover.png");
+}
+.add-row{
+	margin-top: 5px;
+	margin-left: 5px;
+	width: 21%;
+	height: 35px;
+	background-size: 100%;
+	background-image: url("../img/add-raw.png");
+}
+.add-row:hover{
+	background-image: url("../img/add-raw-hover.png");
+}
+.disabled-btn{
+	opacity: 0.5;
+	cursor: default;
+	pointer-events: none;
+}
+.width-62{
+	width: 62%;
+}
+.unbxd-div-td{
+	float: left;
+	height: 100%;
+/*	padding-top: 19px;
+	padding-left: 32px;*/
+	font-size: 17px;
+	border-bottom: 1px solid #dee2e4 !important;
+	border-left: 1px solid #dee2e4 !important;
+}
+.width-28{
+	width: 28%;
+}
+.width-30{
+	width: 30%;
+}
+.width-42{
+	width: 42%;
+}
+.unbxd-hide{
+	display: none !important;
+}
+.pad-top{
+	padding-top: 20px;
+}
+.middle-nav-magento, .inner-container-magento{
+ top: 278px 
+}
+.border-left-color{
+	margin-left: 25px;
+	margin-right: 25px;
+	width: 96%;
+}
+.background-white{
+   background-color: white;
+}
+.pad-left-45{
+	padding-left: 45px;
+}
+.footer{
+	position: fixed;
+	width: 100%;
+	padding-top: 19px;
+	background: #efefef;
+	bottom: -55px;
+}
+.footer:hover{
+	bottom: -5px !important;
+}
+.pad-btm-10p{
+	padding-bottom: 10%;
+}
+.chosen-container{
+	width: 354px !important;
+}
+._unbxd-err{
+	color: red;
+	padding-left: 13%;
+	font-weight: bold;
+}
+._unbxd-success{
+	color: rgb(81, 157, 79);
+	padding-left: 13%;
+	font-weight: bold;
+}
+.unbxd-disabler{
+	opacity: 0.5;
+	margin-bottom: 5%;
+}
+.unbxd-cover{
+	height: 70%;
+	position: absolute;
+	width: 100%;
+	cursor: default;
+	z-index: 999999;
+}
+.pad-left-msg{
+	padding-left: 35%;
+}
+.width-25{
+	width: 25%;
+}
+.width-35{
+	width: 35%;
+}
+.width-40{
+	width: 40%;
+}
+.pad-left-10{
+	padding-left: 13px;
+}
+.pad-btm-0{
+	padding-bottom: 0;
+}
+.height-100{
+	height: 100%;
+}
+.unbxd-success-msg{
+	color: green;
+	font-weight: bold;
+	font-size: 13px;
+}
+.unbxd-error-msg{
+	color: red;
+	font-weight: bold;
+	font-size: 13px;
+}
+.unbxd-center-div{
+	margin: 0 auto;
+	width: 50%;
+	text-align: center;
+}
+.pad-top-20{
+	padding-top: 20px;
+}
+.pad-top-30{
+	padding-top: 30px;
+}
+.inner-container-magento .popover, .inner-container-magento .popover-title, .inner-container-magento .popover-content {
+	background: #3c3f40;
+	color: rgb(255, 255, 255);
+	font-family: proxima-nova, Arial, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	border: none;
+
+}
+.inner-container-magento .popover-content{
+	font-size: 14px;
+	padding-top: 0;
+}
+.magento-number-text {
+	width: 109px;
+}
+.box-35{
+	width: 35px;
+	height: 35px;
+}
+div.chosen-disabled > a.chosen-single > div {
+	display: none;
+}
+div.chosen-container-single ,div.chosen-container-single > a.chosen-single {
+	border: 0;
+	background-color: #FFF;
+}
+div.chosen-container-single > a.chosen-single > div b {
+	background: url(../img/dropdown-arrow.png) no-repeat 50%!important;
+	width: 28px!important;
+	
+}
+.bord-right{
+	border-right: 1px solid #dee2e4 !important;
+}
+.chosen-disabled{
+	opacity: 1 !important;
+}
+.delete-row{
+	float: left;
+}
+.width-80{
+	width: 80% !important;
+}
+.width-20{
+	width: 20%;
+}
+div.cudtom-attr-rows  div div.add-row{
+	display: none;
+}
+div.cudtom-attr-rows >  div:last-child div.add-row{
+	display: block;
+}
+.width-38{
+	width: 38%;
+}
+.pad-top-5{
+	padding-top: 5px;
+}
+.width-64{
+	width: 64%
+}
+.width-36{
+	width: 36%
+}
+.btn-add-attribute, .btn-add-attribute:hover{
+	background: #3b3e40 url('../img/add-raw-hover.png') no-repeat 97%;
+}
+.magento-analytics-tick
+{
+	background:#45b5c1 url('../img/DONE.png') no-repeat 50%;
+}
+.magento-analytics-cross
+{
+	background: url('../img/red-loading.gif') no-repeat;
+	background-size: 92%;
+}
+.unbxd-top-strip{
+  border-top: 2px solid #45b5c1;
+}
+.unbxd-green-border{
+	border: 1px solid  #47b28e;
+}
+.unbxd-green-border{
+	border: 1px solid #db2727;
+}
+.magento-analytics-block{
+	border: 1px solid #47b28e
+}
+.magento-analytics-block1 {
+	border: 1px solid #db2727;
+}
+.word-break{
+	word-wrap:break-word;
+}
+.height-75p{
+	height: 95px;
+}
+.unbxd-text-center{
+	padding-top: 10px;
+}
+.pad-left-15{
+	padding-left: 15px;
+}
+.unbxd-text-verticle-center{
+	display: flex;
+	align-items: center; 
+}
+.background-success{
+	background-color:  #47b28e;
+	height: 102px;
+}
+.background-success div.magento-text{
+	color: #FFF;
+}
+.succes-div{
+	background:#47b28e url('../img/congrats.png') no-repeat 50%;
+	width: 13%;
+	height: 90px;
+}
+.pad-10{
+	padding: 10px;
+}
+.success-head{
+	font-weight: bold;
+	font-size: 20px;
+}
+.magento-landing-block{
+	background-color: rgb(60, 63, 64);
+}
+.blue-link-help{
+	color: #45b5c1;
+	cursor: pointer;
+}
+.cms-help{
+	padding-bottom: 20px;
+	font-size: 16px;
+	padding-left: 30px;
+	padding-top: 5px;
+}
+.hide-over-flow{
+	overflow: hidden;
+}
+.width-60{
+	width: 60%;
+}
+.unbxd-caps{
+	text-transform: capitalize;
+}
+.pad-top-32{
+	padding-top: 32px;
+}
+.background-dark-grey{
+	background-color: rgba(210, 216, 216, 1) !important;
+}
+.unbxd-border{
+	border: 1px solid #cddbde;
+}
+.z99{
+	z-index: 99;
+}
+.magento-row-tabs{
+	float:left;
+	background-color: #f3f6f6;
+	padding: 0;
+}
+
+ul.magento-conf-tabs li a {
+	width: 25%;
+	padding-left: 0 !important;
+	font-weight: 400;
+	font-size: 16px;
+	border-right: 2px solid #B6BCBD;
+	padding-left: 2% !important;
+	cursor: pointer;
+}
+ul.magento-conf-tabs li:last-child > a{
+	border-right: 0;
+}
+.magento-head-active{
+	background-color: #FFF !important;
+}
+.txt-center{
+	text-align: center;
+}
+.height-80{
+	height: 80%;
+}
+.unbxd-bold{
+	font-weight: bold;
+}
+.help-table-head{
+	background-color: #FFF;
+	color: black;
+}
+div#unbxdHelpRows div div {
+	padding-left: 4%;
+}
+.border-right-rad{
+	border-radius: 0;
+	border-top-right-radius: 5px;
+}
+.unbxd-mar-left-30 {
+	margin-left: 30% !important;
+}
+.unbxd-mar-btm-20{
+	margin-bottom: 20px !important;
+}
