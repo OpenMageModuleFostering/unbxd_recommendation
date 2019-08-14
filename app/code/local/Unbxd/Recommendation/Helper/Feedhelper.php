@@ -57,19 +57,19 @@ class Unbxd_Recommendation_Helper_Feedhelper extends Unbxd_Recommendation_Helper
         if(!is_array($category_ids)) {
             return array();
         }
-        $catlevel1 = array();
+        $categoryValues = array();
         foreach($category_ids as $category_id) {
             $category = $this->getCategory($category_id);
             $parentIds = $category->getParentIds();
             if(!is_null($category) && $category->getLevel() == $level) {
-                $catlevel1 = $catlevel1 + array($category->getName());
+                $categoryValues = array_merge($categoryValues, array($category->getName()));
             } else if ($category instanceof Mage_Catalog_Model_Category &&
                 is_array($parentIds) &&
                 (sizeof($parentIds) >0)) {
-                $catlevel1 = $catlevel1 + $this->getCategoryOnLevel($parentIds, $level);
+                $categoryValues = array_merge($categoryValues, $this->getCategoryOnLevel($parentIds, $level));
             }
         }
-        return $catlevel1;
+        return $categoryValues;
     }
 
     public function getCatLevel2(Mage_Core_Model_Website $website, $category_ids, $catlevel1Categories = null) {

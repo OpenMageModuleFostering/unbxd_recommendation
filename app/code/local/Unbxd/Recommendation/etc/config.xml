@@ -1,7 +1,7 @@
 <config>
 	<modules>
 		<Unbxd_Recommendation>
-			<version>1.0.14</version>
+			<version>1.0.16</version>
 		</Unbxd_Recommendation>
 	</modules>
     <admin>

@@ -20,6 +20,7 @@ class Unbxd_Recommendation_Model_Api_Task_Widget extends Unbxd_Recommendation_Mo
         'top-sellers' => 'unbxd_top_sellers',
         'category-top-sellers' => 'unbxd_category_top_sellers',
         'brand-top-sellers' => 'unbxd_brand_top_sellers',
+        'pdp-top-sellers' => 'unbxd_pdp_top_sellers',
         'cart-recommend' => 'unbxd_cart_recommendations');
 
     public function prepare(Mage_Core_Model_Website $website) {
