@@ -1,0 +1,303 @@
+<div class="col-md-60 col-sm-60 col-xs-60 pad-0 magento-inner-block border-left-color pad-btm-10p">
+
+    <div class="row mar-0">
+        <div class="col-md-60 magento-head pad-0 mar-btm-20">
+            Install Recommendation Widget
+        </div>
+    </div>
+    <div class="row mar-0">
+        <div class="col-md-60 magento-text pad-0 ">
+            Recommendation widgets can be displayed on the Homepage, Category Page, Brand Pages, <br> on the Cart and Product Detail Pages.
+        </div>
+    </div>
+    <br>
+    <div class="row mar-0">
+        <div class="col-md-60 magento-text pad-0 mar-btm-20">
+           Unbxd Recommendation widgets can be integrated in either of the methods below
+        </div>
+    </div>
+    <div class="row mar-0 magento-text">
+        <ul>
+            <li class="pad-btm-20">1.Through the CMS. See steps to locate templates using CMS 
+                <span class="blue-link-help" on-click="showCMSHelp">here</span> 
+                <div id="cmsHelp" class="row mar-0 pad-left-30 cms-help" style="display:none">
+                    <ul>
+                        <li>a) On the Magento store admin, navigate to CMS -> Pages</li>
+                        <li>b) In the Manage pages section, select the page you want to paste the widget snippet on</li>
+                        <li>c) On the left navigation, click the Content section for Page Information</li>
+                        <li>d) Paste the snippet on the page that opens up to the right in the appropriate location</li>
+                    </ul>
+                </div>
+                <div style="padding-left:17px;">
+                      Refer to table(a) below which provides information of page type applicable for each snippet
+                </div>  
+            </li>
+
+            <li>
+                2) By pasting the snippets on the appropriate template files
+                <div class="row mar-0">
+                    <div class="col-md-60 magento-text pad-0 cms-help" style="padding-bottom:0">
+                        For eg – To display the <b>“Recently Viewed”</b> widget on the HomePage, place the below snippet in the app/design/frontend/{your_package}/{your_theme}/template/catalog/product/view.phtml file
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-60 col-sm-60 col-xs-60">
+                        <div class="script-block" style="border:0;padding-top:10px">
+                            <pre class="prettyprint-dashboard"> &lt;div id=<span class="pun">"unbxd_recently_viewed"&gt;</span>&lt;/div&gt;
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="row mar-0">
+        <b>Table (a)</b>
+    </div>
+    
+    <div class="row mar-0">
+        <div class="col-md-60 col-sm-60 col-xs-60 pad-0">
+            <div class="row mar-0">
+                <div class="col-md-60 col-sm-60 pad-0 mar-btm-30 ">
+                    <div class="table table-magento hide-over-flow" style="width: 95%;">
+                        <div style="width: 100%;height: 50px;">
+                            <div class="unbxd-div-td unbxd-th  width-30 unbxd-text-verticle-center " 
+                            data-title="Magento Attribute" data-content="Magento fields in your feed" style="border-left: 0px !important;" >
+                                Widget Type
+                            </div>
+
+                            <div class="unbxd-div-td unbxd-th width-40 unbxd-text-verticle-center no-left-top-rad" data-title="Magento Attribute" data-content="Magento fields in your feed" >
+                                HTML Snippet
+                            </div> 
+
+                            <div class="unbxd-div-td unbxd-th width-30 unbxd-text-verticle-center no-left-top-rad no-border-right" data-title="Magento Attribute" data-content="Magento fields in your feed" >
+                                Page Type
+                            </div> 
+                        </div>
+
+        
+                        <div>   
+                                 <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">
+                                        Recently Viewed
+                                    </div>
+
+                                    <div class="unbxd-div-td pad-left-10 width-40 word-break unbxd-text-center">
+                                        &ltdiv id="unbxd_recently_viewed"&gt; &lt/div&gt;
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">
+                                      
+                                        Home Page, Product Page 
+                                    </div>
+
+                                </div>
+
+                                <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 child-right unbxd-text-center unbxd-caps">Recommended for you
+                                    </div>
+
+                                    <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                        &ltdiv id="unbxd_recommended_for_you"&gt; &lt/div&gt;
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break child-right word-break unbxd-text-center">
+                                            Home Page, Product Page  
+                                    </div>
+
+                                </div>
+                               
+                                <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">
+                                        More Like these
+                                    </div>
+
+                                    <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                         &ltdiv id="unbxd_more_like_these"&gt; &lt/div&gt;
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">   
+                                        Product Page
+                                    </div>
+
+                                </div>
+                                <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">
+                                        Viewed also Viewed
+                                    </div>
+                                     <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                        &ltdiv id="unbxd_also_viewed"&gt; &lt/div&gt;
+                                    </div>
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">  
+                                        Product Page
+                                    </div>
+
+                                </div>
+
+                                 <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">Bought Also Bought
+                                    </div>
+
+                                     <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                        &ltdiv id="unbxd_also_bought"&gt; &lt/div&gt;
+                                    </div>
+                                    
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">  Product Page
+                                    </div>
+                                </div>
+
+                                <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">Cart Recommendations
+                                    </div>
+
+                                     <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                        &ltdiv id="unbxd_cart_recommendations"&gt; &lt/div&gt;
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">  Cart Page
+                                    </div>
+                                </div>
+
+                                 <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">
+                                        HomePage Top Sellers
+                                    </div>
+
+                                     <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                        &ltdiv id="unbxd_top_sellers"&gt; &lt/div&gt;
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">  Product Pages 
+                                </div>
+
+                                <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">
+                                        Category Top Sellers
+                                    </div>
+
+                                     <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                       &ltdiv id="unbxd_category_top_sellers"&gt; &lt/div&gt;
+                                    </div>
+    
+                                    
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">  Category/Sub-category Pages 
+                                    </div>
+                                </div>
+
+                                 <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">
+                                        Brand Top Sellers
+                                    </div>
+
+                                     <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                        &ltdiv id="unbxd_brand_top_sellers"&gt; &lt/div&gt;
+                                    </div>
+                                    
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">  Brand Pages
+                                    </div>
+                                </div>
+
+                                <div class="tr-row  ">
+                                    <div class="unbxd-div-td pad-left-10 width-30 unbxd-text-center unbxd-caps">
+                                        PDP Top Sellers
+                                    </div>
+                                    
+                                     <div class="unbxd-div-td pad-left-10 width-40 word-break child-right word-break unbxd-text-center">
+                                       &ltdiv id="unbxd_pdp_top_sellers"&gt; &lt/div&gt;
+                                    </div>
+
+                                    <div class="unbxd-div-td pad-left-10 width-30 word-break unbxd-text-center">  Product Pages 
+                                    </div>
+                                </div>
+                       
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+    <div class="row mar-0">
+        <b>Table (b)</b>
+    </div>
+    
+    <div class="row mar-0">
+        <div class="col-md-60 col-sm-60 col-xs-60 pad-0">
+            <div class="row mar-0" style="width: 95%;">
+                <div class="col-md-60 col-sm-60 pad-0 mar-btm-30 ">
+                    <div class="table table-magento hide-over-flow">
+                        <div style="width: 100%;height: 50px;">
+                            <div class="unbxd-div-td unbxd-th  width-20 unbxd-text-verticle-center " 
+                            data-title="Magento Attribute" data-content="Magento fields in your feed" style="border-left: 0px !important;" >
+                                 Page Type
+                            </div>
+
+                            <div class="unbxd-div-td unbxd-th width-80 unbxd-text-verticle-center no-left-top-rad no-border-right" data-title="Magento Attribute" data-content="Magento fields in your feed" >
+                               Template File
+                            </div> 
+                        </div>
+
+        
+                        <div>
+                                <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-20 child-right unbxd-text-center">Home Page</div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-80 word-break child-right word-break unbxd-text-center">
+                                             app/design/frontend/{your_package}/{your_theme}/template/sample/home.phtml
+                                    </div>
+
+                                </div>
+                                <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-20 unbxd-text-center">
+                                        Product Page
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-80 word-break unbxd-text-center">
+                                        app/design/frontend/{your_package}/{your_theme}/template/catalog/product/view.phtml    
+                                    </div>
+                                </div>
+
+                                 <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-20 unbxd-text-center">
+                                      Cart Page
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-80 word-break unbxd-text-center">
+                                     app/design/frontend/{your_package}/{your_theme}/template/checkout/cart.phtml
+                                    </div>
+                                </div>
+
+                                 <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-20 unbxd-text-center">
+                                       Category Listing Page
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-80 word-break unbxd-text-center">
+                                        app/design/frontend/{your_package}/{your_theme}/template/catalog/product/list.phtml
+                                    </div>
+                                </div>
+
+                                <div class="tr-row ">
+                                    <div class="unbxd-div-td pad-left-10 width-20 unbxd-text-center">
+                                       Brand Pages
+                                    </div>
+                                   
+                                    <div class="unbxd-div-td pad-left-10 width-80 word-break unbxd-text-center">
+                                        app/design/frontend/{your_package}/{your_theme}/template/catalog/product/list.phtml
+                                    </div>
+                                </div>
+
+                              
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+    
+            <div class="row mar-0 magento-text">
+                In case you face any issues, please contact us at <span class="unbxd-blue-link">support@unbxd.com</span>
+            </div>
+
+        </div>
+    </div>
+</div>

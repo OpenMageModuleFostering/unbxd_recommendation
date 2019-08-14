@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <unbxd_recommendation translate="title" module="unbxd_recommendation">
+            <title>Unbxd</title>
+            <action>unbxd/admin/edit</action>
+        </unbxd_recommendation>
+    </menu>
+</config>
