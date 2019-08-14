@@ -1,0 +1,8 @@
+<config>
+    <modules>
+        <Unbxd_Datafeeder>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Unbxd_Datafeeder>
+    </modules>
+</config>

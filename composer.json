@@ -1,9 +1,9 @@
 {
     "name": "OpenMageModuleFostering/unbxd_recommendation",
     "type": "magento-module",
-    "license": "OSL",
+    "license": "OSL-v3.0",
     "homepage": "",
-    "description": "Unbxd module to serve recommendations",
+    "description": "helps integrating the unbxd recommender widgets",
     "authors": [
     {
         "name": "ananthesh",
