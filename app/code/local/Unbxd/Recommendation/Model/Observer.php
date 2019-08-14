@@ -15,6 +15,7 @@ class Unbxd_Recommendation_Model_Observer {
         $product = $observer->getEvent()->getProduct();
         if(!$product instanceof Mage_Catalog_Model_Product) {
             Mage::helper('unbxd_recommendation')->log(Zend_Log::ERR, 'CART_TRACKER:product is not a valid type');
+            return $this;
         }
         $response = Mage::getModel('unbxd_recommendation/api_task_trackcart')
             ->setData('data', array('pid' => Mage::helper('unbxd_recommendation/feedhelper')->getUniqueId($product),'visit_type' => 'repeat'))
@@ -38,6 +39,7 @@ class Unbxd_Recommendation_Model_Observer {
         $payment = $observer->getEvent()->getPayment();
         if(!$payment instanceof Mage_Sales_Model_Order_Payment) {
             Mage::helper('unbxd_recommendation')->log(Zend_Log::ERR, 'ORDER_TRACKER:payment is not a valid type');
+            return $this;
         }
         $items = $payment->getOrder()->getItemsCollection();
 

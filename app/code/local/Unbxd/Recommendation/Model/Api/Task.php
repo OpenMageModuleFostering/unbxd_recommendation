@@ -13,7 +13,7 @@ abstract class Unbxd_Recommendation_Model_Api_Task extends Varien_Object {
 
     const TRACKER_URL = "http://tracker.unbxdapi.com/";
 
-    const RECOMMENDATION_API = "https://apac-recommendations.unbxdapi.com/";
+    const RECOMMENDATION_API = "https://recommendations.unbxdapi.com/";
 
     const TIMEOUT = 30;
 

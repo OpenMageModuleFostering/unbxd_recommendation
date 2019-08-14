@@ -3,7 +3,7 @@
     <!-- ON ALL PAGES -->
     <default>
         <reference name="before_body_end">
-            <block name="unbxd.`.tracking" template="unbxd/tracker.phtml" after="-" type="core/template"/>
+            <block name="unbxd.tracking" template="unbxd/tracker.phtml" after="-" type="core/template"/>
         </reference>
     </default>
     <!-- CATEGORY PAGE -->

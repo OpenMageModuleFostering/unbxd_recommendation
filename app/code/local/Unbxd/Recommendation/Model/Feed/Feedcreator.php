@@ -240,7 +240,7 @@ class Unbxd_Recommendation_Model_Feed_Feedcreator {
                 ->addPriceData(Mage_Customer_Model_Group::NOT_LOGGED_IN_ID, $website->getWebsiteId());
 
             Mage::getSingleton('catalog/product_status')->addVisibleFilterToCollection($collection);
-            Mage::getSingleton('catalog/product_visibility')->addVisibleInSearchFilterToCollection($collection);
+            Mage::getSingleton('catalog/product_visibility')->addVisibleInSiteFilterToCollection($collection);
 
             if(sizeof($ids) > 0){
                 $condition = array('in' => $ids);
