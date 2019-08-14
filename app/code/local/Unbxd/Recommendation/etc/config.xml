@@ -1,7 +1,7 @@
 <config>
 	<modules>
 		<Unbxd_Recommendation>
-			<version>1.0.7</version>
+			<version>1.0.11</version>
 		</Unbxd_Recommendation>
 	</modules>
     <admin>
@@ -9,8 +9,8 @@
             <unbxd_recommendation_router>
                 <use>admin</use>
                 <args>
-                    <module>Unbxd_Recommendation</module>
-                    <frontName>unbxd</frontName>
+                    <module>Unbxd_Recommendation_Adminhtml</module>
+                    <frontName>unbxdadmin</frontName>
                 </args>
             </unbxd_recommendation_router>
         </routers>

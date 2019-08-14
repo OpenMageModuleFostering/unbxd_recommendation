@@ -3,7 +3,7 @@
     <menu>
         <unbxd_recommendation translate="title" module="unbxd_recommendation">
             <title>Unbxd</title>
-            <action>unbxd/admin/edit</action>
+            <action>unbxdadmin/index</action>
         </unbxd_recommendation>
     </menu>
 </config>

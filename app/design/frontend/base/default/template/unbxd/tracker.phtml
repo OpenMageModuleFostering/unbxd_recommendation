@@ -1,4 +1,5 @@
-<input type="hidden" id="jQueryBaseUrl" value="<?php echo Mage::getBaseUrl('js') ?>unbxd/jquery.js"/>
+<input type="hidden" id="jQueryBaseUrl" value="<?php echo Mage::getBaseUrl('js',
+    Mage::app()->getFrontController()->getRequest()->isSecure()) ?>unbxd/jquery.js"/>
 <script type="text/javascript">
 /* * * CONFIGURATION * * */
 var UnbxdSiteName = "<?php echo Mage::getResourceModel('unbxd_recommendation/config')
@@ -15,7 +16,7 @@ if(typeof UnbxdWidgetsConf == 'undefined' || UnbxdWidgetsConf == null) {
 (function() {
   var ubx = document.createElement('script'); 
   ubx.type = 'text/javascript'; ubx.async = true;
-  ubx.src = '//unbxd.s3.amazonaws.com/unbxdAnalytics.js';
+  ubx.src = '//d21gpk1vhmjuf5.cloudfront.net/magentoAnalytics.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ubx);
 })();
 

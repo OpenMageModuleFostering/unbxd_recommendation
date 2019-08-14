@@ -5,16 +5,14 @@
  * @package Unbxd_Recommendation
  * @author Unbxd Software Pvt. Ltd {
  */
-class Unbxd_Recommendation_AdminController extends Mage_Adminhtml_Controller_Action {
+class Unbxd_Recommendation_Adminhtml_IndexController extends Mage_Adminhtml_Controller_Action {
 
     /**
      * @return void
      */
-    public function editAction(){
-        //echo json_encode($this->getLayout()->getUpdate()->getHandles());
+    public function indexAction(){
         $this->loadLayout();
         $this->renderLayout();
     }
 }
-
 ?>
