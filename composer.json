@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/unbxd_recommendation",
+    "name": "OpenMageModuleFostering\/unbxd_recommendation",
     "type": "magento-module",
     "license": "OSL-v3.0",
     "homepage": "",
     "description": "helps integrating the unbxd recommender widgets",
     "authors": [
-    {
-        "name": "ananthesh",
-        "email": "ananthesh@unbxd.com"
-    }
-],
+        {
+            "name": "ananthesh",
+            "email": "ananthesh@unbxd.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
